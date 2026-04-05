@@ -1,0 +1,90 @@
+@extends('layouts.app')
+
+@section('content')
+    <div>
+        <div>
+            <div>
+                <div>
+                    <div>Edit Data Alat </div>
+                    <div>
+                        <form action="{{ route('tools.update') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            {{-- kolom Nama Alat --}}
+                            <div class="mb-3">
+                                <label for="" class="form-label">Nama Alat</label>
+                                <input type="text" name="nama_alat"
+                                    class="form-control @error('nama_alat') is-invalid
+                                @enderror"
+                                    value="{{ old('nama_alat' . $tools->nama_alat) }}" required>
+                                @error('nama_alat')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+
+                            {{-- kolom kategori --}}
+                            <div class="mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select name="category_id"
+                                    class="form-select @error('category_id') is-invalid
+                                @enderror"
+                                    required>
+                                    <option value="">-- Pilih Kategori --</option>
+                                    @foreach ($category as $cat)
+                                        <option value="{{ $cat->id }}"
+                                            {{ old('category_id', $tools->category_id) == $cat->id ? 'selected' : '' }}>
+                                            {{ $cat->nama_kategori }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                {{-- kolom stok --}}
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Stok</label>
+                                    <input type="number" name="stok"
+                                        class="form-control @error('stok') is-invalid
+                                @enderror"
+                                        value="{{ old('stok', $tool->stok) }}" min="0" required>
+                                    @error('stok')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- kolom gambar --}}
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Ganti Gambar (opsional)</label>
+                                    <input type="file" name="gambar"
+                                        class="form-control @error('gambar') is-invalid
+                                @enderror"
+                                        accept="image/*">
+                                    @if ($tool->gambar)
+                                        <div class="mt-2">
+                                            <small class="text-muted">Gambar Saat ini:</small>
+                                            <img src="{{ asset('storage/' . $tool->gambar) }}" alt="Current Image"
+                                                class="img-thumbnail" style="height:80px;">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- deskripsi --}}
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea name="deskripsi" class="form-control" rows="3">{{ old('deskripsi', $tool->deskripsi) }}</textarea>
+                            </div>
+
+                            {{-- button --}}
+                            <div>
+                                <a href="{{ route('tools.index') }}" class="btn btn-secondary">Batal</a>
+                                <div type="submit" class="btn btn-success">Simpan</div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

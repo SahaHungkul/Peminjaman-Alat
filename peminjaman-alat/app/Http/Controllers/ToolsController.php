@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\tools;
+use App\Models\ActivityLog;
+use App\Models\Category;
+use App\Models\Tools;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ToolsController extends Controller
 {
@@ -12,7 +15,8 @@ class ToolsController extends Controller
      */
     public function index()
     {
-        //
+        $tools = Tools::with('category')->latest()->paginate(10);
+        return view('admin.tools.index');
     }
 
     /**
@@ -20,7 +24,8 @@ class ToolsController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('admin.tools.create',compact('categories'));
     }
 
     /**
@@ -28,7 +33,33 @@ class ToolsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validasi
+        $request->validate([
+            'nama_alat' => 'required|string|max:255',
+            'category_id' => 'required|exist:categories,id',
+            'stok' => 'required|integer|min:0',
+            'gambar' => 'nullable|images|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
+            'deskripsi' => 'nullable|string'
+        ]);
+
+        // handle untuk gambar
+        $gambarPath = null;
+        if($request->hasFile('gambar')){
+            $gambarPath = $request->file('gambar')->store('tools','public');
+        }
+
+        // simpan ke DB
+        Tools::create([
+            'nama_alat' => $request->nama_alat,
+            'category_id' => $request->category_id,
+            'stok' => $request->stok,
+            'deskripsi' => $request->deskripsi,
+            'gambar' => $gambarPath
+        ]);
+
+        // catatan Log.
+        ActivityLog::record('Tambah Alat', 'Menambahkan Alat Baru: ' . $request->nama_alat);
+        return redirect()->route('tools.index')->with('success','Alat Berhasil ditambahkan.');
     }
 
     /**
@@ -44,7 +75,8 @@ class ToolsController extends Controller
      */
     public function edit(tools $tools)
     {
-        //
+        $categories = Tools::all();
+        return view('tools.edit',compact( 'tools','categories'));
     }
 
     /**
@@ -52,7 +84,29 @@ class ToolsController extends Controller
      */
     public function update(Request $request, tools $tools)
     {
-        //
+        $request->validate([
+            'nama_alat' => 'required|string|max:255',
+            'category_id' => 'required|exist:categories,id',
+            'stok' => 'required|integer|min:0',
+            'gambar' => 'nullable|images|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
+            'deskripsi' => 'nullable|string'
+        ]);
+
+        $data = $request->except('gambar');
+
+        // handle untuk gambar
+        if($request->hasFile('gambar')){
+            if($tools->gambar && Storage::disk('public')->exists($tools->gambar)){
+                Storage::disk('public')->delete($tools->gambar);
+            }
+            $data['gambar'] = $request->file('gambar')->store('tools','public');
+        }
+
+        $tools->update($data);
+
+        // catatan Log.
+        ActivityLog::record('Update Alat', 'Memperbarui Data Alat: ' . $tools->nama_alat);
+        return redirect()->route('tools.index')->with('success','Alat Berhasil ditambahkan.');
     }
 
     /**
@@ -60,6 +114,14 @@ class ToolsController extends Controller
      */
     public function destroy(tools $tools)
     {
-        //
+        if($tools->gambar && Storage::disk('public')->exists($tools->gambar)){
+            Storage::disk('public')->delete($tools->gambar);
+        }
+
+        $namaAlat = $tools->nama_alat;
+        $tools->delete();
+
+        ActivityLog::record('Hapus Alat', "Mengahpus Alat: " . $namaAlat  );
+        return redirect()->route('tools.index')->with('success','Alat Berhasil dihapus.');
     }
 }
