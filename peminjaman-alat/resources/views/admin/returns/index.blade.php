@@ -3,7 +3,7 @@
 @section('content')
     <div>
         <h3>Pengembalian Alat</h3>
-        <a href="{{ route('admin.returns.create') }}">+ Tambah Pengembalian Manual</a>
+        <a href="{{ route('returns.create') }}">+ Tambah Pengembalian Manual</a>
     </div>
 
     <div>
@@ -23,7 +23,7 @@
                 <tbody>
                     @forelse($returns as $key => $r)
                         <tr>
-                            <td>{{ $return->firstItem() + $key }}</td>
+                            <td>{{ $returns->firstItem() + $key }}</td>
                             <td>{{ $r->user->name }}</td>
                             <td>{{ $r->tool->nama_alat }}</td>
                             <td>{{ $r->tanggal_pinjam }}</td>
@@ -38,8 +38,8 @@
                             </td>
                             <td>{{ $r->petugas ? $r->petugas->name : 'Admin' }}</td>
                             <td>
-                                <a href="{{ route('admin.returns.edit', $r->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('admin.returns.destroy', $r->id) }}" method="POST" class="d-inline"
+                                <a href="{{ route('returns.edit', $r->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('returns.destroy', $r->id) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('Hapus Riwayat ini?');">
                                     @csrf
                                     @method('DELETE')

@@ -4,7 +4,7 @@
     <div>
         <div>Edit Pinjaman #{{ $loan->id }}</div>
         <div class="card-body">
-            <form action="{{ route('admin.loans.update') }}" method="POST">
+            <form action="{{ route('loans.update', $loan->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 {{-- kolom user --}}
@@ -14,7 +14,8 @@
                         <option value="">-- Pilih Siswa --</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}" {{ $loan->user_id == $user->id ? 'selected' : '' }}>
-                                {{ $user->name }}</option>
+                                {{ $user->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -54,11 +55,12 @@
                         <option value="kembali" {{ $loan->status == 'kembali' ? 'selected' : '' }}>Sudah Kembali </option>
                         <option value="ditolak" {{ $loan->status == 'ditolak' ? 'selected' : '' }}>Ditolak </option>
                     </select>
-                    <small class="text-danger">Mengubah status 'Disetujui' ke 'Kembali' akan menambahkan stok otomatis </small>
+                    <small class="text-danger">Mengubah status 'Disetujui' ke 'Kembali' akan menambahkan stok otomatis
+                    </small>
                 </div>
 
                 <button class="btn btn-success">Update Data</button>
-                <a href="{{ route('admin.loans.index') }}" class="btn btn-secondary">Batal</a>
+                <a href="{{ route('loans.index') }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>

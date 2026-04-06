@@ -17,7 +17,8 @@ class AdminLoanController extends Controller
     public function index()
     {
         $loans = Loan::with('user','tool')->latest()->paginate();
-        return view('admin.loans.index');
+        // dd($loans->first()->tool());
+        return view('admin.loans.index',compact('loans'));
     }
 
     /**
@@ -25,7 +26,11 @@ class AdminLoanController extends Controller
      */
     public function create()
     {
-        return view('admin.loans.create');
+        // Ambil user yang rolenya peminjam saja
+        $users = User::where('role', 'peminjam')->get();
+        // Ambil semua alat
+        $tools = Tools::all();
+        return view('admin.loans.create',compact('users','tools'));
     }
 
     /**
@@ -35,13 +40,13 @@ class AdminLoanController extends Controller
     {
         $request->validate([
             'user_id' => 'required',
-            'tool_id' => 'requiured',
+            'tool_id' => 'required',
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali_rencana' => 'required|date|after_or_equal:tanggal_pinjam',
             'status' => 'required'
         ]);
 
-        $tool = Tools::findOrFail($request->tools->id);
+        $tool = Tools::findOrFail($request->tool_id);
         if($request->status == 'disetujui' && $tool->stok <1){
             return back()->withErrors('error', 'Stok alat kosong, tidak bisa set status Disetujui.');
         }
@@ -60,7 +65,7 @@ class AdminLoanController extends Controller
         }
 
         ActivityLog::record('Create Loan','Admin membuat data pinjaman baru.');
-        return redirect()->route('admin.loans.index')->with('success','Data pinjaman berhasil dibuat.');
+        return redirect()->route('loans.index')->with('success','Data pinjaman berhasil dibuat.');
     }
 
     /**
@@ -77,10 +82,10 @@ class AdminLoanController extends Controller
     public function edit(string $id)
     {
         $loan = Loan::findOrFail($id);
-        $user = User::where('role','peminjam')->get();
-        $tool = Tools::all();
+        $users = User::where('role','peminjam')->get();
+        $tools = Tools::all();
 
-        return view('admin.loans.edit', compact('loans','users','tools'));
+        return view('admin.loans.edit', compact('loan','users','tools'));
     }
 
     /**

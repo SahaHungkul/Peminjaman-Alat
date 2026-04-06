@@ -31,7 +31,7 @@
                                 @enderror"
                                     required>
                                     <option value="">-- Pilih Kategori --</option>
-                                    @foreach ($category as $cat)
+                                    @foreach ($categories as $cat)
                                         <option value="{{ $cat->id }}"
                                             {{ old('category_id') == $cat->id ? 'selected' : '' }}>
                                             {{ $cat->nama_kategori }}
@@ -79,7 +79,7 @@
                             {{-- button --}}
                             <div>
                                 <a href="{{ route('tools.index') }}" class="btn btn-secondary">Batal</a>
-                                <div type="submit" class="btn btn-primary">Simpan</div>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </form>
                     </div>

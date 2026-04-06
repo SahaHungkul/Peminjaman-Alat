@@ -12,7 +12,7 @@ class Loan extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
-    public function Tools(){
+    public function tool(){
         return $this->belongsTo(Tools::class);
     }
     public function petugas(){

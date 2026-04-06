@@ -20,7 +20,7 @@ class UserController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('email', 'like', '%' . $request->search . '%');
         }
-        $user = $query->latest()->paginate(10);
+        $users = $query->latest()->paginate(10);
         return view('admin.users.index',compact('users'));
     }
 
@@ -69,6 +69,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        $user = User::findOrFail($id);
         return view('admin.users.edit', compact('user'));
     }
 

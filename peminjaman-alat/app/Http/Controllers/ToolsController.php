@@ -16,7 +16,7 @@ class ToolsController extends Controller
     public function index()
     {
         $tools = Tools::with('category')->latest()->paginate(10);
-        return view('admin.tools.index');
+        return view('admin.tools.index', compact('tools'));
     }
 
     /**
@@ -34,11 +34,18 @@ class ToolsController extends Controller
     public function store(Request $request)
     {
         // validasi
+        // $request->validate([
+        //     'nama_alat' => 'required|string|max:255',
+        //     'category_id' => 'required|exist:categories,id',
+        //     'stok' => 'required|integer|min:0',
+        //     'gambar' => 'nullable|images|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
+        //     'deskripsi' => 'nullable|string'
+        // ]);
         $request->validate([
             'nama_alat' => 'required|string|max:255',
-            'category_id' => 'required|exist:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'stok' => 'required|integer|min:0',
-            'gambar' => 'nullable|images|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
             'deskripsi' => 'nullable|string'
         ]);
 
@@ -112,16 +119,28 @@ class ToolsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(tools $tools)
+    public function destroy(Tools $tool)
     {
-        if($tools->gambar && Storage::disk('public')->exists($tools->gambar)){
-            Storage::disk('public')->delete($tools->gambar);
+        // if($tools->gambar && Storage::disk('public')->exists($tools->gambar)){
+        //     Storage::disk('public')->delete($tools->gambar);
+        // }
+
+        // $namaAlat = $tools->nama_alat;
+        // $tools->delete();
+
+        // ActivityLog::record('Hapus Alat', "Mengahpus Alat: " . $namaAlat  );
+        // return redirect()->route('tools.index')->with('success','Alat Berhasil dihapus.');
+
+         // Hapus file gambar dari storage jika ada
+        if ($tool->gambar && Storage::disk('public')->exists($tool->gambar)) {
+            Storage::disk('public')->delete($tool->gambar);
         }
 
-        $namaAlat = $tools->nama_alat;
-        $tools->delete();
+        $namaAlat = $tool->nama_alat;
+        $tool->delete();
 
-        ActivityLog::record('Hapus Alat', "Mengahpus Alat: " . $namaAlat  );
-        return redirect()->route('tools.index')->with('success','Alat Berhasil dihapus.');
+        ActivityLog::record('Hapus Alat', 'Menghapus alat: ' . $namaAlat);
+
+        return redirect()->route('tools.index')->with('success', 'Alat berhasil dihapus.');
     }
 }

@@ -13,8 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories =Category::withCount('tools')->latest()->paginate(10);
-        return view('admin.categories.index',compact('cataegories'));
+        $categories = Category::withCount('tools')->latest()->paginate(10);
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**
@@ -54,7 +54,7 @@ class CategoryController extends Controller
      */
     public function edit(category $category)
     {
-        return view('admin.categories.edit', compact('categories'));
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -65,13 +65,17 @@ class CategoryController extends Controller
         $request->validate([
             'nama_kategori' => 'required|string|max:255|unique:categories,nama_kategori' . $category->id
         ]);
+
         $oldName = $category->nama_kategori;
         Category::update([
             'nama_kategori' => $request->nama_kategori
         ]);
 
         ActivityLog::record('update Kategori', "Mengubah Kategori $oldName menjadi " . $request->nama_kategori);
-        return redirect()->route('categories.index')->with('success','Kategori Berhasil diperbarui.');
+        ActivityLog::record('Update Kategori', "Mengubah kategori $oldName menjadi " . $request->nama_kategori);
+
+        return redirect()->route('categories.index')->with('success', 'Kategori diperbarui.');
+        return redirect()->route('categories.index')->with('success', 'Kategori diperbarui.');
     }
 
     /**
@@ -79,7 +83,7 @@ class CategoryController extends Controller
      */
     public function destroy(category $category)
     {
-        if($category->tools() >0){
+        if($category->tools()->count() > 0){
             return back()->withErrors(['error' => 'Kategori tidak bisa dihapus karena masih memiliki data alat. hapus atau pindahkan alatnya terlebih dahulu']);
         }
         $nama = $category->nama_kategori;

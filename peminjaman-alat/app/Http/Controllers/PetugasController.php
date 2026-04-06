@@ -7,8 +7,6 @@ use App\Models\Tools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use function Symfony\Component\Clock\now;
-
 class PetugasController extends Controller
 {
     public function index(){
@@ -16,6 +14,8 @@ class PetugasController extends Controller
         $activeLoans = Loan::where('status', 'disetujui')->with(['user', 'tool'])->get();
 
         $sudahDikembalikan = Loan::where('status', 'kembali')->with(['user', 'tool'])->get();
+
+        return view('petugas.dashboard',compact('loans','activeLoans','sudahDikembalikan'));
     }
 
     public function approve($id){

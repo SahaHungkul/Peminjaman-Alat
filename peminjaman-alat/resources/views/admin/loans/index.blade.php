@@ -4,7 +4,7 @@
 {{-- header start --}}
 <div>
     <h3>Kelola Data Peminjaman Admin</h3>
-    <a href="{{ route('admin.loans.create') }}">+ Tambah Peminjaman Manual</a>
+    <a href="{{ route('loans.create') }}">+ Tambah Peminjaman Manual</a>
 </div>
 {{-- header end --}}
 
@@ -25,7 +25,7 @@
             <tbody>
                 @forelse($loans as $key => $loan)
                 <tr>
-                    <td>{{ $loans->firsItem() + $key }}</td>
+                    <td>{{ $loans->firstItem() + $key }}</td>
                     <td>{{ $loan->user->name }}</td>
                     <td>{{ $loan->tool->nama_alat }}</td>
                     <td>{{ $loan->tanggal_pinjam }} <br>
@@ -39,8 +39,8 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('admin.loans.edit', $loan->id) }}">Edit</a>
-                        <form action="{{ route('admin.loans.destroy',$loan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
+                        <a href="{{ route('loans.edit', $loan->id) }}">Edit</a>
+                        <form action="{{ route('loans.destroy',$loan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-sm">Hapus</button>
@@ -54,7 +54,7 @@
                 @endforelse
             </tbody>
         </table>
-        <div class="mt-3">{{ $loans->link('pagination::bootstrap-5') }}</div>
+        <div class="mt-3">{{ $loans->links('pagination::bootstrap-5') }}</div>
     </div>
 </div>
 {{-- main end --}}

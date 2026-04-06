@@ -31,9 +31,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($user as $key => $user)
+                    @forelse($users as $key => $user)
                         <tr>
-                            <td>{{ $user->firstItem() + $key }}</td>
+                            <td>{{ $users->firstItem() + $key }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
@@ -49,12 +49,12 @@
                                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">
                                     Edit
                                 </a>
-                                <form action="{{ route('users.destroy', $user->id) }}" class="d-inline"
+                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('Yakin mengahpus User ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm"
-                                        {{ $user->id == auth()->id ? 'disabled' : '' }}>
+                                        {{ $user->id == auth()->id() ? 'disabled' : '' }}>
                                         Hapus
                                     </button>
                                 </form>
@@ -66,7 +66,7 @@
                 </tbody>
             </table>
             <div class="mt-3">
-                {{ $user->link('pagination::bootstrap-5') }}
+                {{ $users->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

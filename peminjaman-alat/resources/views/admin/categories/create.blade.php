@@ -1,25 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>
-        <div>
-            <div>
-                <div>Tambah Kategori</div>
-                <div>
-                    <form action="{{ route('categories.store') }}">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header fw-bold">Tambah Kategori</div>
+                <div class="card-body">
+                    <form action="{{ route('categories.store') }}" method="POST">
                         @csrf
-                        <div>
+                        <div class="mb-3">
                             <label for="">Nama Kategori</label>
                             <input type="text" name="nama_kategori"
-                                class="form-controller @error('nama_kategori') is-invalid
-                        @enderror"
+                                class="form-control @error('nama_kategori') is-invalid @enderror"
                                 value{{ old('nama_kategori') }} placeholder="Contoh: Elektronik, Furniture, dll" required>
                             @error('nama_kategori')
-                            <div class="invalid-feedack">{{ $message }}</div>
+                                <div class="invalid-feedack">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div>
+                        <div class="d-flex justify-content-between">
                             <a href="{{ route('categories.index') }}" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>

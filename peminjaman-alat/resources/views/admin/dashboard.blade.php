@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="mb-4">
-        <h3>dasboard Administrator</h3>
-        <p class="text-muted">Selamat Datang, {{ auth()->user()->name }}</p>
+        <h3>Dashboard Administrator</h3>
+        <p class="text-muted">Selamat datang, {{ auth()->user()->name }}!</p>
     </div>
 
     {{-- container start --}}
@@ -21,8 +21,8 @@
                     <h2 class="card-title">{{ $totalUser }}</h2>
                     <p class="card-text">User Terdaftar</p>
                 </div>
-                <div>
-                    <a href="{{ route('user.index') }}" class="text-white text-decoration-none small">Lihat Detail</a>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <a href="{{ route('users.index') }}" class="text-white text-decoration-none small">Lihat Detail</a>
                     <span class="small">&rarr;</span>
                 </div>
             </div>
@@ -30,13 +30,13 @@
 
         {{-- card data Alat --}}
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3 h-100">
+            <div class="card text-white bg-success mb-3 h-100">
                 <div class="card-header">Data Alat</div>
                 <div class="card-body">
-                    <h2 class="card-title">{{ $totalAlat }} <span class="fs-2">(stok:{{ $totalStok }})</span></h2>
+                    <h2 class="card-title">{{ $totalAlat }} <span class="fs-6">(stok:{{ $totalStok }})</span></h2>
                     <p class="card-text">Jenis Alat Tersedia</p>
                 </div>
-                <div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
                     <a href="{{ route('tools.index') }}" class="text-white text-decoration-none small">Lihat Detail</a>
                     <span class="small">&rarr;</span>
                 </div>
@@ -45,14 +45,14 @@
 
         {{-- card kategori --}}
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3 h-100">
-                <div class="card-header"></div>
+            <div class="card text-black bg-warning mb-3 h-100">
+                <div class="card-header">Kategori</div>
                 <div class="card-body">
                     <h2 class="card-title">{{ $totalKategori }}</h2>
                     <p class="card-text">Kategori Alat </p>
                 </div>
-                <div>
-                    <a href="{{ route('categories.index') }}" class="text-white text-decoration-none small">Lihat Detail</a>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <a href="{{ route('categories.index') }}" class="text-black text-decoration-none small">Lihat Detail</a>
                     <span class="small">&rarr;</span>
                 </div>
             </div>
@@ -62,14 +62,14 @@
     <div class="row mb-4">
         {{-- card Peminjaman AKtif --}}
         <div class="col-md-6">
-            <div class="card text-white bg-primary mb-3 h-100">
+            <div class="card text-white bg-danger mb-3 h-100">
                 <div class="card-header">Sedang Dipinjam</div>
                 <div class="card-body">
                     <h2 class="card-title">{{ $sedangDipinjam }}</h2>
                     <p class="card-text">Pinjaman Aktif </p>
                 </div>
-                <div>
-                    <a href="{{ route('admin.loans.index') }}" class="text-white text-decoration-none small">Pantau</a>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <a href="{{ route('loans.index') }}" class="text-white text-decoration-none small">Pantau</a>
                     <span class="small">&rarr;</span>
                 </div>
             </div>
@@ -77,14 +77,14 @@
 
         {{-- Card Kembali --}}
         <div class="col-md-6">
-            <div class="card text-white bg-primary mb-3 h-100">
+            <div class="card text-white bg-info mb-3 h-100">
                 <div class="card-header">Sudah Dikembalikan</div>
                 <div class="card-body">
                     <h2 class="card-title">{{ $sudahDikembalikan }}</h2>
                     <p class="card-text">Transaksi Selesai</p>
                 </div>
-                <div>
-                    <a href="{{ route('admin.returns.index') }}" class="text-white text-decoration-none small">Pantau</a>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <a href="{{ route('returns.index') }}" class="text-white text-decoration-none small">Pantau</a>
                     <span class="small">&rarr;</span>
                 </div>
             </div>
@@ -111,14 +111,14 @@
                         <tbody>
                             @forelse($recentLogs as $log)
                                 <tr>
-                                    <td class="samll text-muted"{{ $log->created_at->difforHumans }}></td>
+                                    <td class="small text-muted">{{ $log->created_at->diffForHumans() }}</td>
                                     <td>
-                                        <span class="">{{ ucfirst($log->user->name) }}</span>
+                                        <span class="fw-bold">{{ ($log->user->name) }}</span>
                                         <br>
-                                        <span class="">{{ ucfirst($log->user->role) }}</span>
+                                        <span class="badge bg-secondary" style="font-size: 0.7em">{{ ucfirst($log->user->role) }}</span>
                                     </td>
                                     <td>{{ $log->action }}</td>
-                                    <td>{{ Str::limit($log->deskripsi, 50) }}</td>
+                                    <td class="text-muted small">{{ Str::limit($log->deskripsi, 50) }}</td>
                                 </tr>
                             @empty
                                 <tr>

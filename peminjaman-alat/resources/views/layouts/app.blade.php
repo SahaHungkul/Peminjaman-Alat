@@ -28,9 +28,9 @@
                                     Kategori</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('tools.index') }}">Kelola Alat</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">Kelola User</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('admin.loans.index') }}">Kelola
+                            <li class="nav-item"><a class="nav-link" href="{{ route('loans.index') }}">Kelola
                                     Peminjaman</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('admin.return.index') }}">Kelola
+                            <li class="nav-item"><a class="nav-link" href="{{ route('returns.index') }}">Kelola
                                     Pengembalian</a></li>
 
                             {{-- navbar untuk petugas --}}

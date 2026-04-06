@@ -28,7 +28,7 @@ class AdminReturnController extends Controller
     {
         $activeLoans= Loan::with(['user','tool'])
         ->where('status','disetujui')
-        ->latest('')
+        ->latest()
         ->get();
         return view('admin.returns.create',compact('activeLoans'));
     }
@@ -109,6 +109,6 @@ class AdminReturnController extends Controller
 
         $loan->delete();
 
-        return redirect()->route('admin.loans.index')->with('success','Data Berhasil dihapus');
+        return redirect()->route('loans.index')->with('success','Data Berhasil dihapus');
     }
 }

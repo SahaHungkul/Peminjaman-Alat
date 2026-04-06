@@ -4,7 +4,7 @@
     {{-- header start --}}
     <div>
         <h3>Proses Pengembalian Alat</h3>
-        <a href="{{ route('admin.returns.index') }}">Kembali Ke Riwayat</a>
+        <a href="{{ route('returns.index') }}">Kembali Ke Riwayat</a>
     </div>
     {{-- header end --}}
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_alat');
             $table->text('deskripsi')->nullable();
-            $table->foreignId('categoriy_id')->constrained('categories');
+            $table->foreignId('category_id')->constrained('categories');
             $table->integer('stok');
             $table->string('gambar')->nullable();
             $table->timestamps();

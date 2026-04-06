@@ -4,7 +4,7 @@
     <div>
         <div>Tambah Pinjaman Manual</div>
         <div>
-            <form action="{{ route('admin.loans.store') }}" method="POST">
+            <form action="{{ route('loans.store') }}" method="POST">
                 @csrf
 
                 {{-- kolom user --}}
@@ -52,7 +52,7 @@
                 </div>
 
                 <button class="btn btn-primary">Simpan</button>
-                <a href="{{ route('admin.loans.index') }}" class="btn btn-secondary">Batal</a>
+                <a href="{{ route('loans.index') }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>

@@ -2,18 +2,18 @@
 
 @section('content')
     {{-- header start --}}
-    <div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h3>Kelola Data Alat</h3>
-        <a href="{{ route('tools.create') }}">+ Tambah Alat Baru</a>
+        <a href="{{ route('tools.create') }}" class="btn btn-primary">+ Tambah Alat Baru</a>
     </div>
     {{-- header end --}}
 
     {{-- container start --}}
-    <div>
-        <div>
-            <div>
-                <table>
-                    <thead>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-dark">
                         <tr>
                             <th width="5%">No</th>
                             <th width="15%">Gambar</th>
@@ -29,8 +29,8 @@
                                 <td>{{ $tools->firstItem() + $key }}</td>
                                 <td>
                                     @if ($tool->gambar)
-                                        <img src="{{ asset('storage/' . $tool->gambar) }}" alt="img" class="img-thumbnail"
-                                            style="heigh:60px">
+                                        <img src="{{ asset('storage/' . $tool->gambar) }}" alt="img"
+                                            class="img-thumbnail" style="heigh:60px">
                                     @else
                                         <span class="text-muted small">No image</span>
                                     @endif
@@ -40,28 +40,31 @@
                                     <div>{{ $tool->deskripsi }}</div>
                                 </td>
                                 <td>
-                                    <span>{{ $tool->category_nama_kategori }}</span>
+                                    <span>{{ $tool->category->nama_kategori }}</span>
                                 </td>
                                 <td>{{ $tool->stok }}</td>
                                 <td>
-                                    <a href="{{ route('tools.edit',$tool->id) }}" class="btn btnn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('tools.destroy') . $tool->id }}" method="POST" class="d-inline" onsubmit="return confirm('yakin ingin mengahpus alat ini? Data peminjaman terkait mungkin akan erro.r');">
+                                    <a href="{{ route('tools.edit', $tool->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{{ route('tools.destroy', $tool->id) }}" method="POST" class="d-inline"
+                                        onsubmit="return confirm('yakin ingin mengahpus alat ini? Data peminjaman terkait mungkin akan error');">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-danger btn-sm">Hapus</button>
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            Hapus
+                                        </button>
                                     </form>
                                 </td>
                             </tr>
-                            @empty
+                        @empty
                             <tr>
                                 <td colspan="6" class="text-center py-4"> Belum Ada alat. Silahkan tambah data Baru</td>
                             </tr>
-                            @endforelse
+                        @endforelse
                     </tbody>
                 </table>
             </div>
             <div class="mt-3">
-                {{ $tool->link('pagination::bootstrap-5') }}
+                {{ $tools->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

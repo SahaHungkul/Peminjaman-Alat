@@ -16,26 +16,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($loans as $loan )
-                        @forelse($loans as $loan)
-                            <tr>
-                                <td>{{ $loan->user->name }}</td>
-                                <td>{{ $loan->tool->nama_alat }}</td>
-                                <td>{{ $loan->tanggal_pinjam }}</td>
-                                <td>{{ $loan->tanggal_kembali_rencana }}</td>
-                                <td>
-                                    <form action="{{ url('/petugas/approve/' . $loan->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button class="btn btn-success btn-sm">Setujui</button>
-                                    </form>
-                                    <button class="btn btn-danger btn-sm">Tolak</button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center">Tidak ada permintaan baru.</td>
-                            </tr>
-                        @endforelse
+                    @forelse($loans as $loan)   
+                        <tr>
+                            <td>{{ $loan->user->name }}</td>
+                            <td>{{ $loan->tool->nama_alat }}</td>
+                            <td>{{ $loan->tanggal_pinjam }}</td>
+                            <td>{{ $loan->tanggal_kembali_rencana }}</td>
+                            <td>
+                                <form action="{{ url('/petugas/approve/' . $loan->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button class="btn btn-success btn-sm">Setujui</button>
+                                </form>
+                                <button class="btn btn-danger btn-sm">Tolak</button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Tidak ada permintaan baru.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
