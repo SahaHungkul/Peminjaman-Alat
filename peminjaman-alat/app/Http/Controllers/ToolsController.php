@@ -80,20 +80,21 @@ class ToolsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(tools $tools)
+    public function edit(tools $tool)
     {
-        $categories = Tools::all();
-        return view('tools.edit',compact( 'tools','categories'));
+        // $tool = Tools::findOrFail($tool);
+        $categories = Category::all();
+        return view('admin.tools.edit',compact( 'tool','categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, tools $tools)
+    public function update(Request $request, tools $tool)
     {
         $request->validate([
             'nama_alat' => 'required|string|max:255',
-            'category_id' => 'required|exist:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|images|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
             'deskripsi' => 'nullable|string'
@@ -103,16 +104,16 @@ class ToolsController extends Controller
 
         // handle untuk gambar
         if($request->hasFile('gambar')){
-            if($tools->gambar && Storage::disk('public')->exists($tools->gambar)){
-                Storage::disk('public')->delete($tools->gambar);
+            if($tool->gambar && Storage::disk('public')->exists($tool->gambar)){
+                Storage::disk('public')->delete($tool->gambar);
             }
             $data['gambar'] = $request->file('gambar')->store('tools','public');
         }
 
-        $tools->update($data);
+        $tool->update($data);
 
         // catatan Log.
-        ActivityLog::record('Update Alat', 'Memperbarui Data Alat: ' . $tools->nama_alat);
+        ActivityLog::record('Update Alat', 'Memperbarui Data Alat: ' . $tool->nama_alat);
         return redirect()->route('tools.index')->with('success','Alat Berhasil ditambahkan.');
     }
 

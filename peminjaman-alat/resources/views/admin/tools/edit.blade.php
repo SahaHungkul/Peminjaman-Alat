@@ -7,7 +7,7 @@
                 <div>
                     <div>Edit Data Alat </div>
                     <div>
-                        <form action="{{ route('tools.update') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('tools.update', $tool->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             {{-- kolom Nama Alat --}}
@@ -16,7 +16,7 @@
                                 <input type="text" name="nama_alat"
                                     class="form-control @error('nama_alat') is-invalid
                                 @enderror"
-                                    value="{{ old('nama_alat' . $tools->nama_alat) }}" required>
+                                    value="{{ old('nama_alat', $tool->nama_alat) }}" required>
                                 @error('nama_alat')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -31,9 +31,8 @@
                                 @enderror"
                                     required>
                                     <option value="">-- Pilih Kategori --</option>
-                                    @foreach ($category as $cat)
-                                        <option value="{{ $cat->id }}"
-                                            {{ old('category_id', $tools->category_id) == $cat->id ? 'selected' : '' }}>
+                                    @foreach ($categories as $cat)
+                                        <option value="{{ $cat->id }}" {{ old('category_id', $tool->category_id) == $cat->id ? 'selected' : '' }}>
                                             {{ $cat->nama_kategori }}
                                         </option>
                                     @endforeach
@@ -79,7 +78,7 @@
                             {{-- button --}}
                             <div>
                                 <a href="{{ route('tools.index') }}" class="btn btn-secondary">Batal</a>
-                                <div type="submit" class="btn btn-success">Simpan</div>
+                                <button type="submit" class="btn btn-success">Simpan</button>
                             </div>
                         </form>
                     </div>

@@ -108,10 +108,10 @@ class AdminLoanController extends Controller
         }
         // 3.disetujui ke pending
         elseif($loan->status == 'disetujui' && $request->status == 'pending'){
-            $tool->increment('stol');
+            $tool->increment('stok');
         }
 
-        $loan::update([
+        $loan->update([
             'user_id' => $request->user_id,
             'tool_id' => $request->tool_id,
             'tanggal_pinjam' => $request->tanggal_pinjam,
@@ -120,7 +120,7 @@ class AdminLoanController extends Controller
             'petugas_id' => Auth::id()
         ]);
 
-        return redirect()->route('admin.loans.index')->with('success','Data peminjaman berhasil diperbarui');
+        return redirect()->route('loans.index')->with('success','Data peminjaman berhasil diperbarui');
     }
 
     /**
