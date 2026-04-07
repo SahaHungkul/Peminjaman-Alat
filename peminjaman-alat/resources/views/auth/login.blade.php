@@ -4,13 +4,13 @@
     <div class="row justify-content-center">
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header">Login Aplikasi</div>
+                <div class="card-header fs-4 text-center">Login Aplikasi</div>
                 <div class="card-body">
                     <form action="{{ url('login') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="">Email</label>
-                            <input type="email" name="email" id="" class="form-control" required>
+                            <input type="email" name="email" id="" class="form-control" placeholder="akun@app.com" required>
                         </div>
                         <div class="mb-3">
                             <label for="">Password</label>
@@ -18,6 +18,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Masuk</button>
                     </form>
+                    <p class="mt-3 text-center">Belum Punya Akun? Silahkan <a href="{{ route('register') }}">Daftar</a></p>
                 </div>
             </div>
         </div>

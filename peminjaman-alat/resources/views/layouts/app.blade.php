@@ -24,14 +24,11 @@
                         {{-- navbar untuk admin --}}
                         @if (auth()->user()->role == 'admin')
                             <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Kelola
-                                    Kategori</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Kelola Kategori</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('tools.index') }}">Kelola Alat</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">Kelola User</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('loans.index') }}">Kelola
-                                    Peminjaman</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('returns.index') }}">Kelola
-                                    Pengembalian</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('loans.index') }}">Kelola Peminjaman</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('returns.index') }}">Kelola Pengembalian</a></li>
 
                             {{-- navbar untuk petugas --}}
                         @elseif(auth()->user()->role == 'petugas')
