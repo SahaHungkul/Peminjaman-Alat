@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -36,6 +38,28 @@ class AuthController extends Controller
             return redirect('/peminjam/dashboard');
         }
         return back()->withErrors(['email' => 'Login Gagal']);
+    }
+
+    public function showRegisterForm(){
+        return view('auth.register');
+    }
+
+    public function register(Request $request){
+    $request->validate([
+        'name'=> 'required|string|max:255',
+        'email' => 'required|string|email|unique:users',
+        'password' => 'required|string|min:8|confirmed'
+    ]);
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->Password),
+    ]);
+    Auth::login($user);
+
+    return redirect('/peminjam/dashboard')->with('success','Akun berhasil dibuat');
+
     }
 
     // function logout

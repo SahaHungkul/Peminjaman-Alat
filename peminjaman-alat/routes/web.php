@@ -24,8 +24,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 route::get('/login',[AuthController::class,'showLoginForm'])->name('login');
+route::get('/register',[AuthController::class,'showRegisterForm'])->name('register');
 route::post('/login',[AuthController::class,'login']);
 route::post('/logout',[AuthController::class,'logout'])->name('logout');
+route::post('/register',[AuthController::class,'register'])->name('register');
 
 route::middleware(['auth','role:admin'])->group(function(){
     Route::get('/admin/dashboard',[AdminController::class,'index']);
