@@ -37,8 +37,8 @@ route::middleware(['auth','role:admin'])->group(function(){
     Route::resource('admin/loans',AdminLoanController::class)->names('admin.loans');
     route::resource('admin/returns',AdminReturnController::class)->names('admin.returns');
     Route::get('/admin/logs',function(){
-        $logs = ActivityLog::with('user')->latest()->get();
-        return view('admin.logs',compact('logs'));
+        $recentLog = ActivityLog::with('user')->latest()->paginate(20);
+        return view('admin.logs',compact('recentLog'));
     });
 });
 

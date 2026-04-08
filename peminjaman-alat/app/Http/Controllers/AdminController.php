@@ -34,4 +34,9 @@ class AdminController extends Controller
             'recentLogs'
         ));
     }
+    public function log(){
+        $recentLog = ActivityLog::with('user')->latest()->paginate(20);
+        // dd($recentLog);
+        return view('admin.logs' , compact('recentLog'));
+    }
 }
