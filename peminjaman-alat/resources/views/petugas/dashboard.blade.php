@@ -5,7 +5,7 @@
     <div class="card mb-4">
         <div class="card-header bg-warning">Menunggu Persetujuan</div>
         <div class="card-body">
-            <table>
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Peminjam</th>
@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($loans as $loan)   
+                    @forelse($loans as $loan)
                         <tr>
                             <td>{{ $loan->user->name }}</td>
                             <td>{{ $loan->tool->nama_alat }}</td>
@@ -41,7 +41,7 @@
     </div>
 
     <h3>Daftar Sedang Dipinjam (Belum Kembali)</h3>
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header bg-info text-white">Monitor Peminjaman</div>
         <div class="card-body">
             <table class="table">
@@ -72,8 +72,8 @@
         </div>
     </div>
 
-    <h3>>Daftar Sudah Dikembalikan</h3>
-    <div class="card">
+    <h3>Daftar Sudah Dikembalikan</h3>
+    <div class="card mb-3">
         <div class="card-header bg-info text-white">Monitor Peminjaman</div>
         <div class="card-body">
             <table class="table">

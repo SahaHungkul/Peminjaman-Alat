@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>
-        <div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header fw-bold">Edit User: {{ $user->name }}</div>
                 <div class="card-body">
@@ -33,16 +33,21 @@
                                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Administrator</option>
                             </select>
                         </div>
+
+                        <hr>
+
                         <div class="mb-3">
-                            <label for="">Password Baru <small class="text-muted">(Kosongkan jika tidak ingin memperbarui
+                            <label for="">Password Baru <small class="text-muted">(Kosongkan jika tidak ingin
+                                    memperbarui
                                     password)</small></label>
                             <input type="password" name="password"
                                 class="form-control @error('password') is-invalid
-                            @enderror" minlength="6">
+                            @enderror"
+                                minlength="6">
                             @error('password')
                             @enderror
                         </div>
-                        <div>
+                        <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('users.index') }}" class="btn btn-secondary">batal</a>
                             <button class="btn btn-success" type="submit">
                                 Edit User

@@ -40,7 +40,7 @@ class AdminReturnController extends Controller
     {
         $request->validate([
             'loan_id' => 'required|exists:loans,id',
-            'denda' => 'nullable|integer'
+            // 'denda' => 'nullable|integer'
         ]);
 
         $loan = Loan::findOrFail($request->loan_id);
@@ -109,6 +109,6 @@ class AdminReturnController extends Controller
 
         $loan->delete();
 
-        return redirect()->route('loans.index')->with('success','Data Berhasil dihapus');
+        return redirect()->route('admin.loans.index')->with('success','Data Berhasil dihapus');
     }
 }

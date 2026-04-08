@@ -30,7 +30,7 @@
                                 <td>
                                     @if ($tool->gambar)
                                         <img src="{{ asset('storage/' . $tool->gambar) }}" alt="img"
-                                            class="img-thumbnail" style="heigh:60px">
+                                            class="img-thumbnail" style="height: 60px">
                                     @else
                                         <span class="text-muted small">No image</span>
                                     @endif

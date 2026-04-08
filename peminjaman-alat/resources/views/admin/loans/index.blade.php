@@ -2,17 +2,17 @@
 
 @section('content')
 {{-- header start --}}
-<div>
-    <h3>Kelola Data Peminjaman Admin</h3>
-    <a href="{{ route('loans.create') }}">+ Tambah Peminjaman Manual</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Kelola Data Peminjaman (Admin)</h3>
+    <a href="{{ route('admin.loans.create') }}" class="btn btn-primary">+ Tambah Peminjaman Manual</a>
 </div>
 {{-- header end --}}
 
 {{-- main start --}}
-<div>
-    <div>
-        <table>
-            <thead>
+<div class="card">
+    <div class="card-body">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
                 <tr>
                     <th>No</th>
                     <th>Peminjam</th>
@@ -39,8 +39,8 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('loans.edit', $loan->id) }}">Edit</a>
-                        <form action="{{ route('loans.destroy',$loan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
+                        <a href="{{ route('admin.loans.edit', $loan->id) }}" class="btn btn-info text-white btn-sm">Edit</a>
+                        <form action="{{ route('admin.loans.destroy',$loan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?');">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-sm">Hapus</button>

@@ -2,23 +2,23 @@
 
 @section('content')
     {{-- header start --}}
-    <div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Proses Pengembalian Alat</h3>
-        <a href="{{ route('returns.index') }}">Kembali Ke Riwayat</a>
+        <a href="{{ route('admin.returns.index') }}" class="btn btn-secondary">Kembali Ke Riwayat</a>
     </div>
     {{-- header end --}}
 
     {{-- alert start --}}
-    <div>
+    <div class="alert alert-info">
         Silahkan pilih data peminjaman di bawah ini untuk proses pengembaliannya
     </div>
     {{-- alert end --}}
 
     {{-- main start --}}
-    <div>
-        <div>Daftar Alat Sedang dipinjam</div>
-        <div>
-            <table>
+    <div class="card">
+        <div class="card-header bg-primary text-white">Daftar Alat Sedang Dipinjam</div>
+        <div class="card-body">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Peminjam</th>
@@ -36,7 +36,7 @@
                             <td>{{ $loan->tool->nama_alat }}</td>
                             <td>{{ $loan->tanggal_pinjam }}</td>
                             <td>
-                                {{ $loan->tanggal_pinjam_rencana }}
+                                {{ $loan->tanggal_kembali_rencana }}
                                 @if (now() > $loan->tanggal_kembali_rencana)
                                     <span class="badge bg-danger">Lewat Jatuh Tempo</span>
                                 @endif
@@ -45,7 +45,7 @@
                             <td>
                                 <form action="{{ route('admin.returns.store') }}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="loan_id" class="{{ $loan->id }}">
+                                    <input type="hidden" name="loan_id" value="{{ $loan->id }}">
 
                                     <button type="submit" class="btn btn-success btn-sm"
                                         onclick="return confirm('konfirmasi: Barang sudah diterima kembali dan kondisi baik?')">Proses
@@ -53,7 +53,7 @@
                                 </form>
                             </td>
                         </tr>
-                        @empty
+                    @empty
                         <tr>
                             <td colspan="6" class="text-center py-4">Tidak ada alat yang sedang dipinjam saat ini.</td>
                         </tr>

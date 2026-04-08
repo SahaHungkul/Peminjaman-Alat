@@ -96,7 +96,7 @@ class ToolsController extends Controller
             'nama_alat' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'stok' => 'required|integer|min:0',
-            'gambar' => 'nullable|images|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
             'deskripsi' => 'nullable|string'
         ]);
 
@@ -114,7 +114,7 @@ class ToolsController extends Controller
 
         // catatan Log.
         ActivityLog::record('Update Alat', 'Memperbarui Data Alat: ' . $tool->nama_alat);
-        return redirect()->route('tools.index')->with('success','Alat Berhasil ditambahkan.');
+        return redirect()->route('tools.index')->with('success','Alat Berhasil diperbarui.');
     }
 
     /**

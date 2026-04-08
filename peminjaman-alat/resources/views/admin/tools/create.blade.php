@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>
-        <div>
-            <div>
-                <div>
-                    <div>Tambah Alat Baru</div>
-                    <div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header fw-bold">Tambah Alat Baru</div>
+                    <div class="card-body">
                         <form action="{{ route('tools.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
@@ -45,7 +45,7 @@
                             <div class="row">
 
                                 {{-- kolom stok --}}
-                                <div class="mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="" class="form-label">Stok</label>
                                     <input type="number" name="stok"
                                         class="form-control @error('stok') is-invalid

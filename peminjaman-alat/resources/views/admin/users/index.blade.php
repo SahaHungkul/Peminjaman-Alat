@@ -2,15 +2,15 @@
 
 @section('content')
     {{-- header start --}}
-    <div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h3>Kelola Data Pengguna</h3>
         <a href="{{ route('users.create') }}" class="btn btn-primary">+ Tambah User Baru</a>
     </div>
     {{-- header end --}}
 
     {{-- form action start --}}
-    <div>
-        <form action="">
+    <div class="mb-3">
+        <form action="{{ route('users.index') }}" method="GET" class="d-flex gap-2" style="max-width:400px;">
             <input type="text" name="search" class="form-control" placeholder="Cari Nama atau Email...">
             <button type="submit" class="btn btn-secondary">Cari</button>
         </form>
@@ -20,10 +20,10 @@
     {{-- card start --}}
     <div class="card">
         <div class="card-body">
-            <table>
+            <table class="table table-bordered table-striped align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th>No</th>
+                        <th width="5%">No</th>
                         <th>Nama Lengkap</th>
                         <th>Email</th>
                         <th>Role</th>

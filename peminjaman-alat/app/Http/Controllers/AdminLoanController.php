@@ -16,7 +16,7 @@ class AdminLoanController extends Controller
      */
     public function index()
     {
-        $loans = Loan::with('user','tool')->latest()->paginate();
+        $loans = Loan::with('user','tool')->latest()->paginate(10);
         // dd($loans->first()->tool());
         return view('admin.loans.index',compact('loans'));
     }
@@ -47,8 +47,8 @@ class AdminLoanController extends Controller
         ]);
 
         $tool = Tools::findOrFail($request->tool_id);
-        if($request->status == 'disetujui' && $tool->stok <1){
-            return back()->withErrors('error', 'Stok alat kosong, tidak bisa set status Disetujui.');
+        if($request->status == 'disetujui' && $tool->stok < 1){
+            return back()->with('error', 'Stok alat kosong, tidak bisa set status Disetujui.');
         }
 
         Loan::create([
@@ -65,7 +65,7 @@ class AdminLoanController extends Controller
         }
 
         ActivityLog::record('Create Loan','Admin membuat data pinjaman baru.');
-        return redirect()->route('loans.index')->with('success','Data pinjaman berhasil dibuat.');
+        return redirect()->route('admin.loans.index')->with('success','Data pinjaman berhasil dibuat.');
     }
 
     /**
@@ -98,7 +98,7 @@ class AdminLoanController extends Controller
 
         // logika perubahan stok berdasarkan satatus
         // 1. pending ke setuju (stok berkuran)
-        if($loan->status == 'pending' && $request->status =='disteujui'){
+        if($loan->status == 'pending' && $request->status =='disetujui'){
             $tool->decrement('stok');
         }
         // 2. disetujui ke kembali (stok bertambah)
@@ -117,10 +117,10 @@ class AdminLoanController extends Controller
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_kembali_rencana' => $request->tanggal_kembali_rencana,
             'status' => $request->status,
-            'petugas_id' => Auth::id()
+            'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual ?? $loan->tanggal_kembali_aktual
         ]);
 
-        return redirect()->route('loans.index')->with('success','Data peminjaman berhasil diperbarui');
+        return redirect()->route('admin.loans.index')->with('success','Data peminjaman berhasil diperbarui');
     }
 
     /**

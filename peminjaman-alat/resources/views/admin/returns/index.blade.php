@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>
-        <h3>Pengembalian Alat</h3>
-        <a href="{{ route('returns.create') }}">+ Tambah Pengembalian Manual</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Data Pengembalian Alat</h3>
+        <a href="{{ route('admin.returns.create') }}" class="btn btn-success">+ Proses Pengembalian Baru</a>
     </div>
 
-    <div>
-        <div>
-            <table>
-                <thead>
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
                     <tr>
                         <th>NO</th>
                         <th>Peminjam</th>
@@ -38,8 +38,8 @@
                             </td>
                             <td>{{ $r->petugas ? $r->petugas->name : 'Admin' }}</td>
                             <td>
-                                <a href="{{ route('returns.edit', $r->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('returns.destroy', $r->id) }}" method="POST" class="d-inline"
+                                <a href="{{ route('admin.returns.edit', $r->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('admin.returns.destroy', $r->id) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('Hapus Riwayat ini?');">
                                     @csrf
                                     @method('DELETE')

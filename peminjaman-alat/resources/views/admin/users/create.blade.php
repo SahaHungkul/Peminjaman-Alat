@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>
-        <div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header fw-bold">Tambah User Baru</div>
                 <div class="card-body">
@@ -53,7 +53,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div>
+                        <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('users.index') }}" class="btn btn-secondary">batal</a>
                             <button class="btn btn-primary" type="submit">
                                 Simpan User

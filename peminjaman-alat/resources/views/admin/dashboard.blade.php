@@ -69,7 +69,7 @@
                     <p class="card-text">Pinjaman Aktif </p>
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">
-                    <a href="{{ route('loans.index') }}" class="text-white text-decoration-none small">Pantau</a>
+                    <a href="{{ route('admin.loans.index') }}" class="text-white text-decoration-none small">Pantau</a>
                     <span class="small">&rarr;</span>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                     <p class="card-text">Transaksi Selesai</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">
-                    <a href="{{ route('returns.index') }}" class="text-white text-decoration-none small">Pantau</a>
+                    <a href="{{ route('admin.returns.index') }}" class="text-white text-decoration-none small">Pantau</a>
                     <span class="small">&rarr;</span>
                 </div>
             </div>

@@ -12,7 +12,7 @@
 
 <body>
     {{-- navbar start --}}
-    <nav  class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
         <div class="container">
             {{-- navbar logo --}}
             <a href="#" class="navbar-brand">Sistem Peminjaman</a>
@@ -24,11 +24,14 @@
                         {{-- navbar untuk admin --}}
                         @if (auth()->user()->role == 'admin')
                             <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Kelola Kategori</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Kelola
+                                    Kategori</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('tools.index') }}">Kelola Alat</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">Kelola User</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('loans.index') }}">Kelola Peminjaman</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('returns.index') }}">Kelola Pengembalian</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('admin.loans.index') }}">Kelola
+                                    Peminjaman</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('admin.returns.index') }}">Kelola
+                                    Pengembalian</a></li>
 
                             {{-- navbar untuk petugas --}}
                         @elseif(auth()->user()->role == 'petugas')
@@ -36,8 +39,8 @@
 
                             {{-- navbar untuk peminjam --}}
                         @elseif(auth()->user()->role == 'peminjam')
-                            <li class="nav-item"><a class="nav-link" href="/petugas/laporan">Daftar</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/petugas/laporan">Riwayat Saya</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/peminjam/dashboard">Daftar</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/peminjam/riwayat">Riwayat Saya</a></li>
                         @endif
                     @endauth
                 </ul>
