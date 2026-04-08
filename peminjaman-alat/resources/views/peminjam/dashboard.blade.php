@@ -2,12 +2,28 @@
 
 @section('content')
     <h3>Daftar Alat Tersedia</h3>
+
+    <div class="mb-3">
+        <form action="{{ route('peminjam.dashboard') }}" method="GET" class="d-flex gap-2" style="max-width:400px;">
+            <input type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="Cari Nama">
+            <button type="submit" class="btn btn-secondary">Cari</button>
+        </form>
+    </div>
+
     <div class="row mt-4">
         @foreach ($tools as $tool)
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">{{ $tool->nama_alat }}</h5>
+                        <div>
+                            @if ($tool->gambar)
+                                <img src="{{ asset('storage/' . $tool->gambar) }}" alt="img" class="img-thumbnail"
+                                    style="height: 60px">
+                            @else
+                                <span class="text-muted small">No image</span>
+                            @endif
+                        </div>
                         <span class="badge bg-secondary mb-2">{{ $tool->category->nama_kategori }}</span>
                         <p class="card-text">{{ $tool->deskripsi }}</p>
                         <p class="fw-bold">Sisa Stok: {{ $tool->stok }}</p>

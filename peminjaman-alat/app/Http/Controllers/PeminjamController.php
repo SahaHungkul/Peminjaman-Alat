@@ -10,8 +10,17 @@ use Illuminate\Support\Facades\Auth;
 
 class PeminjamController extends Controller
 {
-    public function index() {
-        $tools = Tools::with('category')->get();
+    public function index(Request $request) {
+
+        $query = Tools::with('category');
+
+        if($request->filled('search')){
+            $search = $request->search;
+            $query->where('nama_alat', 'like', '%' . $search . '%');
+                // ->orWhere('category_id', 'like', '%' . $search . '%');
+        }
+
+        $tools = $query->latest()->paginate(10)->withQueryString();
         return view('peminjam.dashboard', compact('tools'));
     }
 

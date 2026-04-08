@@ -42,14 +42,14 @@ route::middleware(['auth','role:admin'])->group(function(){
     });
 });
 
-Route::get('/petugas/dashboard',[PetugasController::class,'index']);
 Route::middleware(['auth','role:petugas'])->group(function(){
+    Route::get('/petugas/dashboard',[PetugasController::class,'index']);
     Route::post('/petugas/approve/{id}',[PetugasController::class,'approve']);
     Route::post('/petugas/return/{id}',[PetugasController::class,'processReturn']);
     Route::get('/petugas/laporan',[PetugasController::class,'report']);
 });
 Route::middleware(['auth','role:peminjam'])->group(function(){
-    Route::get('/peminjam/dashboard',[PeminjamController::class,'index']);
+    Route::get('/peminjam/dashboard',[PeminjamController::class,'index'])->name('peminjam.dashboard');
     Route::post('/peminjam/ajukan',[PeminjamController::class,'store']);
     Route::get('/peminjam/riwayat',[PeminjamController::class,'history']);
 });
