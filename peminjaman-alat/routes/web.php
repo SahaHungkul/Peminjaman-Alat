@@ -36,6 +36,7 @@ route::middleware(['auth','role:admin'])->group(function(){
     route::resource('categories',CategoryController::class);
     Route::resource('admin/loans',AdminLoanController::class)->names('admin.loans');
     route::resource('admin/returns',AdminReturnController::class)->names('admin.returns');
+    Route::patch('/admin/{id}/returns',[AdminReturnController::class,'konfirmasibayar'])->name('admin.returns.bayar');
     Route::get('/admin/logs',function(){
         $recentLog = ActivityLog::with('user')->latest()->paginate(20);
         return view('admin.logs',compact('recentLog'));
