@@ -77,9 +77,9 @@ class AdminReturnController extends Controller
         $loan = Loan::findOrFail($id);
 
         if($loan->status != 'kembali'){
-            return redirect()->route('admin.loans.index');
+            return redirect()->route('admin.returns.index');
         }
-        return view('admin.loans.edit',compact('loan'));
+        return view('admin.returns.edit',compact('loan'));
     }
 
     /**
@@ -97,7 +97,8 @@ class AdminReturnController extends Controller
             'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual
         ]);
 
-        return redirect()->route('admin.loans.edit')->with('success','Data Pengembalian diperbarui');
+        return redirect()->route('admin.returns.index')->with('success','Data Pengembalian diperbarui');
+
     }
 
     /**
