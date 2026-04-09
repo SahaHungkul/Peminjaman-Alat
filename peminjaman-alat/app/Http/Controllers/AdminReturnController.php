@@ -40,7 +40,7 @@ class AdminReturnController extends Controller
     {
         $request->validate([
             'loan_id' => 'required|exists:loans,id',
-            // 'denda' => 'nullable|integer'
+            'denda' => 'nullable|integer'
         ]);
 
         $loan = Loan::findOrFail($request->loan_id);
@@ -48,10 +48,13 @@ class AdminReturnController extends Controller
         if($loan->status != 'disetujui'){
             return back()->with('error','Data tidak valid atau sudah dikembalikan.');
         }
+        $denda = $request->denda ?? 0;
+
         $loan->update([
             'status' => 'kembali',
             'tanggal_kembali_aktual' =>now(),
-            // 'denda' => $request->denda,
+            'denda' => $denda ,
+            'status_denda' => $denda > 0 ? 'belum_bayar' : 'tidak_ada',
         ]);
 
         $tool = Tools::findOrFail($loan->tool_id);
@@ -110,6 +113,21 @@ class AdminReturnController extends Controller
 
         $loan->delete();
 
-        return redirect()->route('admin.loans.index')->with('success','Data Berhasil dihapus');
+        return redirect()->route('admin.returns .index')->with('success','Data Berhasil dihapus');
+    }
+    public function konfirmasiBayar($id){
+        $loan = Loan::findOrFail($id);
+
+        if($loan->denda == 0 || $loan->denda == 'tidak_ada'){
+            return back()->with('error','tidak ada denda pada peminjamanini');
+        }
+
+        $loan->update([
+            'status_denda' => 'lunas'
+        ]);
+        ActivityLog::record('Pembayaran Denda','Konfirmasi pembayaran denda:' . $loan->tool->nama_alat);
+
+        // return redirect()->route('admin.loans.index')->with('success','denda lunas');
+        return back()->with('success','denda lunas');
     }
 }

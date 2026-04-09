@@ -33,12 +33,19 @@ class PetugasController extends Controller
         return back()->with('success','Peminjaman Disetujui');
     }
 
-    public function processReturn($id){
+    public function processReturn(Request $request, $id){
+        $request->validate([
+            'denda' => 'nullable|integer|min:0'
+        ]);
+
         $loan = Loan::findOrFail($id);
 
+        $denda = $request->denda ?? 0;
         $loan->update([
             'status' => 'kembali',
-            'tanggal_kembali_aktual' =>now()
+            'tanggal_kembali_aktual' =>now(),
+            'denda' => $denda,
+            'status_denda' => $denda > 0 ? 'belum_bayar' : 'tidak_ada',
         ]);
 
         $tool = Tools::find($loan->tool_id);
