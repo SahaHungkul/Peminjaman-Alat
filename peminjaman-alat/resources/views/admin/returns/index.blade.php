@@ -16,6 +16,8 @@
                         <th>Alat</th>
                         <th>Tgl Pinjam</th>
                         <th>Tgl Kembali (Aktual)</th>
+                        <th>Denda</th>
+                        <th>Status Denda</th> {{-- ← tambahkan kolom ini --}}
                         <th>Petugas</th>
                         <th>Aksi</th>
                     </tr>
@@ -29,16 +31,48 @@
                             <td>{{ $r->tanggal_pinjam }}</td>
                             <td>
                                 {{ $r->tanggal_kembali_aktual }}
-
                                 @if ($r->tanggal_kembali_aktual > $r->tanggal_kembali_rencana)
                                     <span class="badge bg-danger">Telat</span>
                                 @else
                                     <span class="badge bg-success">Tepat Waktu</span>
                                 @endif
                             </td>
-                            <td>{{ $r->petugas ? $r->petugas->name : 'Admin' }}</td>
+
+                            {{-- Kolom Denda --}}
                             <td>
+                                @if ($r->denda > 0)
+                                    Rp {{ number_format($r->denda, 0, ',', '.') }}
+                                @else
+                                    <span class="text-muted"> - </span>
+                                @endif
+                            </td>
+
+                            {{-- Kolom Status Denda --}}
+                            <td>
+                                @if ($r->status_denda == 'tidak_ada')
+                                    <span class="badge bg-secondary">Tidak Ada</span>
+                                @elseif ($r->status_denda == 'belum_bayar')
+                                    <span class="badge bg-danger">Belum Bayar</span>
+                                @elseif ($r->status_denda == 'lunas')
+                                    <span class="badge bg-success">Lunas</span>
+                                @endif
+                            </td>
+
+                            <td>{{ $r->petugas ? $r->petugas->name : 'Admin' }}</td>
+
+                            <td>
+                                {{-- Tombol Konfirmasi Lunas --}}
+                                @if ($r->status_denda == 'belum_bayar')
+                                    <form action="{{ route('admin.returns.bayar', $r->id) }}" method="POST"
+                                        class="d-inline" onsubmit="return confirm('Konfirmasi denda sudah dibayar?')">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button class="btn btn-success btn-sm">Konfirmasi Lunas</button>
+                                    </form>
+                                @endif
+
                                 <a href="{{ route('admin.returns.edit', $r->id) }}" class="btn btn-warning btn-sm">Edit</a>
+
                                 <form action="{{ route('admin.returns.destroy', $r->id) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('Hapus Riwayat ini?');">
                                     @csrf
@@ -49,7 +83,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">Belum ada data pengembalian.</td>
+                            <td colspan="9" class="text-center">Belum ada data pengembalian.</td> {{-- ← sesuaikan colspan --}}
                         </tr>
                     @endforelse
                 </tbody>

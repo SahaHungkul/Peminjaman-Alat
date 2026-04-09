@@ -26,6 +26,7 @@
                         <th>tgl Pinjam</th>
                         <th>Rencana Kembali</th>
                         <th>Status</th>
+                        <td>Denda</td>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -43,14 +44,21 @@
                             </td>
                             <td><span class="badge bg-primary">Sedang dipinjam</span></td>
                             <td>
-                                <form action="{{ route('admin.returns.store') }}" method="POST">
+                                <form action="{{ route('admin.returns.store') }}" method="POST" id="form-return-{{ $loan->id }}">
                                     @csrf
                                     <input type="hidden" name="loan_id" value="{{ $loan->id }}">
 
-                                    <button type="submit" class="btn btn-success btn-sm"
-                                        onclick="return confirm('konfirmasi: Barang sudah diterima kembali dan kondisi baik?')">Proses
-                                        Kembali</button>
+                                    {{-- Tambahkan input denda --}}
+                                    <input type="number" name="denda" class="form-control form-control-sm" min="0"
+                                        value="0" style="width: 130px" placeholder="0">
+                                    <small class="text-muted">Isi 0 jika tidak ada denda</small>
                                 </form>
+                            </td>
+                            <td>
+                                <button type="submit" form="form-return-{{ $loan->id }}" class="btn btn-success btn-sm"
+                                    onclick="return confirm('Konfirmasi: Barang sudah diterima kembali dan kondisi baik?')">
+                                    Proses Kembali
+                                </button>
                             </td>
                         </tr>
                     @empty
