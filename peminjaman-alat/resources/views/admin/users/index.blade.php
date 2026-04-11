@@ -46,18 +46,20 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">
-                                    Edit
-                                </a>
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline"
-                                    onsubmit="return confirm('Yakin mengahpus User ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                        {{ $user->id == auth()->id() ? 'disabled' : '' }}>
-                                        Hapus
-                                    </button>
-                                </form>
+                                <div class="d-flex gap-1">
+                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">
+                                        Edit
+                                    </a>
+
+                                    @if ($user->id != auth()->id())
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin menghapus User ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty

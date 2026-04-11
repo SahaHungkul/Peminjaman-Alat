@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\User;
+// use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -37,6 +40,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
+        try{
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -52,7 +57,13 @@ class UserController extends Controller
 
         ActivityLog::record('Tambah User','Menambahkan user baru'. $user->name. '(' . $user->role . ')' );
 
+        DB::commit();
         return redirect()->route('users.index')->with('success','User Berhasil ditambahkan');
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error('gagal store user:' . $e->getMessage());
+            return redirect()->back()->with('error','Terjadi Kesalahan sistem. Silahkan Coba lagi.')->withInput();
+        }
     }
 
 
@@ -78,6 +89,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        DB::beginTransaction();
+        try{
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -97,7 +110,14 @@ class UserController extends Controller
 
         ActivityLog::record('Update User','Memperbarui data user '. $user->name);
 
+        DB::commit();
         return redirect()->route('users.index')->with('success','User Berhasil diperbaharui');
+        }catch(\Exception $e){
+            DB::rollBack();
+
+            Log::error('gagal update user:' . $e->getMessage());
+            return redirect()->back()->with('error', 'terjadi kesalahan Sistem.')->withInput();
+        }
     }
 
     /**
@@ -105,14 +125,25 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if($user->id == Auth::id()){
-            return back()->withErrors(['error' => 'anda tidak dapat menghapus akun Anda Sendiri Saat sedang login']);
+        if ($user->id == Auth::id()) {
+            return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri saat sedang login.');
         }
-        $nama = $user->name;
-        $user->delete();
 
-        ActivityLog::record('Hapus User',' Menghapus user: ' . $nama);
+        DB::beginTransaction();
+        try {
+            $nama = $user->name;
+            $user->delete();
 
-        return redirect()->route('users.index')->with('success','User Berhasil dihapus.');
+            ActivityLog::record('Hapus User', 'Menghapus user: ' . $nama);
+
+            DB::commit();
+            return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('Gagal destroy user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem.');
+        }
     }
 }

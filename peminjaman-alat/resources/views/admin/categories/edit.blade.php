@@ -6,18 +6,17 @@
             <div class="card">
                 <div class="card-header fw-bold">Edit Kategori</div>
                 <div class="card-body">
-                    <form action="{{ route('categories.update', $category->id) }}">
+                    <form action="{{ route('categories.update', $category->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
-                            <label for="">Nama Kategori</label>
-                            <input type="text" name="nama_kategori"
-                                class="form-control @error('nama_kategori') is-invalid
-                        @enderror"
-                                value="{{ old('nama_kategori', $category->nama_kategori) }}"" required>
+                            <label for="nama_kategori">Nama Kategori</label>
+                            <input type="text" name="nama_kategori" id="nama_kategori"
+                                class="form-control @error('nama_kategori') is-invalid @enderror"
+                                value="{{ old('nama_kategori', $category->nama_kategori) }}" required>
 
                             @error('nama_kategori')
-                                <div class="invalid-feedack">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 

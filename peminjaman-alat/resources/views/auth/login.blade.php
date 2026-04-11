@@ -1,25 +1,68 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header fs-4 text-center">Login Aplikasi</div>
-                <div class="card-body">
+    <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+        <div class="col-md-5 col-lg-4">
+            {{-- Logo atau Nama Brand di atas Card --}}
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-dark">
+                    <i class="bi bi-tools text-primary"></i> PINJAMIN AJA
+                </h2>
+                <p class="text-muted">Silahkan masuk ke akun Anda</p>
+            </div>
+
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="fw-bold mb-4 text-center">Login Aplikasi</h4>
+
                     <form action="{{ url('login') }}" method="POST">
                         @csrf
+
+                        {{-- Input Email --}}
                         <div class="mb-3">
-                            <label for="">Email</label>
-                            <input type="email" name="email" id="" class="form-control" placeholder="akun@app.com" required>
+                            <label class="form-label fw-semibold">Alamat Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-envelope text-muted"></i>
+                                </span>
+                                <input type="email" name="email" class="form-control bg-light border-start-0 ps-0"
+                                       placeholder="akun@app.com" required autofocus>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="">Password</label>
-                            <input type="password" name="password" id="" class="form-control" required>
+
+                        {{-- Input Password --}}
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label fw-semibold">Password</label>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-lock text-muted"></i>
+                                </span>
+                                <input type="password" name="password" class="form-control bg-light border-start-0 ps-0"
+                                       placeholder="••••••••" required>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Masuk</button>
+
+                        {{-- Tombol Login --}}
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
+                            Masuk Sekarang <i class="bi bi-arrow-right-short ms-1"></i>
+                        </button>
                     </form>
-                    <p class="mt-3 text-center">Belum Punya Akun? Silahkan <a href="{{ route('register') }}">Daftar</a></p>
+
+                    <hr class="my-4 text-muted opacity-25">
+
+                    <p class="mb-0 text-center text-muted small">
+                        Belum punya akun? <a href="{{ route('register') }}" class="text-primary fw-bold text-decoration-none">Daftar Sekarang</a>
+                    </p>
                 </div>
+            </div>
+
+            {{-- Link Kembali ke Home --}}
+            <div class="text-center mt-4">
+                <a href="{{ url('/') }}" class="text-muted text-decoration-none small">
+                    <i class="bi bi-chevron-left"></i> Kembali ke Beranda
+                </a>
             </div>
         </div>
     </div>

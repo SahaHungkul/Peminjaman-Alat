@@ -50,6 +50,7 @@
                         <th>Peminjam</th>
                         <th>Alat</th>
                         <th>Status</th>
+                        <th>Denda</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -59,11 +60,24 @@
                             <td>{{ $active->user->name }}</td>
                             <td>{{ $active->tool->nama_alat }}</td>
                             <td><span class="badge bg-primary">{{ $active->status }}</span></td>
+
+                            {{-- Kolom denda --}}
                             <td>
-                                <form action="{{ url('/petugas/return/' . $active->id) }}" method="POST">
+                                <form action="{{ url('/petugas/return/' . $active->id) }}" method="POST"
+                                    id="form-return-{{ $active->id }}">
                                     @csrf
-                                    <button class="btn btn-primary btn-sm">Proses Pengembalian</button>
+                                    <input type="number" name="denda" class="form-control form-control-sm" min="0"
+                                        value="0" style="width: 130px" placeholder="0">
+                                    <small class="text-muted">Isi 0 jika tidak ada denda</small>
                                 </form>
+                            </td>
+
+                            <td>
+                                <button type="submit" form="form-return-{{ $active->id }}"
+                                    class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Konfirmasi pengembalian alat?')">
+                                    Proses Pengembalian
+                                </button>
                             </td>
                         </tr>
                     @endforeach

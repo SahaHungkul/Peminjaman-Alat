@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -15,58 +18,89 @@ class AuthController extends Controller
     }
 
     // validasi untuk login
-    public function login(Request $request){
-        $credentials = $request->validate([
-            'email' => ['required','email'],
-            'password' => ['required']
-        ]);
+    public function login(Request $request)
+    {
+        DB::beginTransaction();
 
-        if (Auth::attempt($credentials)){
-            $request->session()->regenerate();
+        try {
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required']
+            ]);
 
-            // redirect berdasarkan role
-            if(Auth::check() && Auth::user()->role == "admin"){
-                return redirect('/admin/dashboard');
-            }
-            if(Auth::check() && Auth::user()->role == "petugas"){
-                return redirect('petugas/dashboard');
-            }
-            if(Auth::attempt($credentials)){
-                ActivityLog::record('Login','Pengguna Melakukan Login');
+            if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
+
+                ActivityLog::record('Login', 'Pengguna melakukan login');
+
+                DB::commit();
+
+                // Redirect berdasarkan role
+                if (Auth::user()->role == 'admin') {
+                    return redirect('/admin/dashboard');
+                } elseif (Auth::user()->role == 'petugas') {
+                    return redirect('/petugas/dashboard');
+                }
+
+                return redirect('/peminjam/dashboard');
             }
-            return redirect('/peminjam/dashboard');
+
+            DB::commit();
+
+            return back()->withErrors(['email' => 'Login gagal']);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            Log::error('Gagal login: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem.')->withInput();
         }
-        return back()->withErrors(['email' => 'Login Gagal']);
     }
 
     public function showRegisterForm(){
         return view('auth.register');
     }
 
-    public function register(Request $request){
-    $request->validate([
-        'name'=> 'required|string|max:255',
-        'email' => 'required|string|email|unique:users',
-        'password' => 'required|string|min:8|confirmed'
-    ]);
+    public function register(Request $request)
+    {
+        DB::beginTransaction();
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-    ]);
-    Auth::login($user);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|unique:users',
+                'password' => 'required|string|min:8|confirmed'
+            ]);
 
-    return redirect('/peminjam/dashboard')->with('success','Akun berhasil dibuat');
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
+            Auth::login($user);
+
+            ActivityLog::record('Register', 'Pengguna membuat akun baru');
+
+            DB::commit();
+
+            return redirect('/peminjam/dashboard')->with('success', 'Akun berhasil dibuat');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            Log::error('Gagal register: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem.')->withInput();
+        }
     }
 
     // function logout
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/login');
     }
 }

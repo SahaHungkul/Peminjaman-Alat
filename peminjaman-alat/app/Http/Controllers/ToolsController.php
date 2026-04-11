@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\ActivityLog;
 use App\Models\Category;
 use App\Models\Tools;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ToolsController extends Controller
@@ -33,46 +36,48 @@ class ToolsController extends Controller
      */
     public function store(Request $request)
     {
-        // validasi
-        // $request->validate([
-        //     'nama_alat' => 'required|string|max:255',
-        //     'category_id' => 'required|exist:categories,id',
-        //     'stok' => 'required|integer|min:0',
-        //     'gambar' => 'nullable|images|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
-        //     'deskripsi' => 'nullable|string'
-        // ]);
-        $request->validate([
-            'nama_alat' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'stok' => 'required|integer|min:0',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
-            'deskripsi' => 'nullable|string'
-        ]);
+        DB::beginTransaction();
 
-        // handle untuk gambar
-        $gambarPath = null;
-        if($request->hasFile('gambar')){
-            $gambarPath = $request->file('gambar')->store('tools','public');
+        try {
+            $request->validate([
+                'nama_alat' => 'required|string|max:255',
+                'category_id' => 'required|exists:categories,id',
+                'stok' => 'required|integer|min:0',
+                'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'deskripsi' => 'nullable|string'
+            ]);
+
+            $gambarPath = null;
+            if ($request->hasFile('gambar')) {
+                $gambarPath = $request->file('gambar')->store('tools', 'public');
+            }
+
+            Tools::create([
+                'nama_alat' => $request->nama_alat,
+                'category_id' => $request->category_id,
+                'stok' => $request->stok,
+                'deskripsi' => $request->deskripsi,
+                'gambar' => $gambarPath
+            ]);
+
+            ActivityLog::record('Tambah Alat', 'Menambahkan alat baru: ' . $request->nama_alat);
+
+            DB::commit();
+
+            return redirect()->route('tools.index')->with('success', 'Alat berhasil ditambahkan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            Log::error('Gagal store tools: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem.')->withInput();
         }
-
-        // simpan ke DB
-        Tools::create([
-            'nama_alat' => $request->nama_alat,
-            'category_id' => $request->category_id,
-            'stok' => $request->stok,
-            'deskripsi' => $request->deskripsi,
-            'gambar' => $gambarPath
-        ]);
-
-        // catatan Log.
-        ActivityLog::record('Tambah Alat', 'Menambahkan Alat Baru: ' . $request->nama_alat);
-        return redirect()->route('tools.index')->with('success','Alat Berhasil ditambahkan.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(tools $tools)
+    public function show(Tools $tools)
     {
         //
     }
@@ -80,41 +85,51 @@ class ToolsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(tools $tool)
+    public function edit(Tools $tool)
     {
-        // $tool = Tools::findOrFail($tool);
         $categories = Category::all();
-        return view('admin.tools.edit',compact( 'tool','categories'));
+        return view('admin.tools.edit', compact('tool', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, tools $tool)
+    public function update(Request $request, Tools $tool)
     {
-        $request->validate([
-            'nama_alat' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'stok' => 'required|integer|min:0',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', //gambar dengan max size sebesar 2mb
-            'deskripsi' => 'nullable|string'
-        ]);
+        DB::beginTransaction();
 
-        $data = $request->except('gambar');
+        try {
+            $request->validate([
+                'nama_alat' => 'required|string|max:255',
+                'category_id' => 'required|exists:categories,id',
+                'stok' => 'required|integer|min:0',
+                'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'deskripsi' => 'nullable|string'
+            ]);
 
-        // handle untuk gambar
-        if($request->hasFile('gambar')){
-            if($tool->gambar && Storage::disk('public')->exists($tool->gambar)){
-                Storage::disk('public')->delete($tool->gambar);
+            $data = $request->except('gambar');
+
+            if ($request->hasFile('gambar')) {
+                if ($tool->gambar && Storage::disk('public')->exists($tool->gambar)) {
+                    Storage::disk('public')->delete($tool->gambar);
+                }
+                $data['gambar'] = $request->file('gambar')->store('tools', 'public');
             }
-            $data['gambar'] = $request->file('gambar')->store('tools','public');
+
+            $tool->update($data);
+
+            ActivityLog::record('Update Alat', 'Memperbarui data alat: ' . $tool->nama_alat);
+
+            DB::commit();
+
+            return redirect()->route('tools.index')->with('success', 'Alat berhasil diperbarui.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            Log::error('Gagal update tools: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem.')->withInput();
         }
-
-        $tool->update($data);
-
-        // catatan Log.
-        ActivityLog::record('Update Alat', 'Memperbarui Data Alat: ' . $tool->nama_alat);
-        return redirect()->route('tools.index')->with('success','Alat Berhasil diperbarui.');
     }
 
     /**
@@ -122,26 +137,27 @@ class ToolsController extends Controller
      */
     public function destroy(Tools $tool)
     {
-        // if($tools->gambar && Storage::disk('public')->exists($tools->gambar)){
-        //     Storage::disk('public')->delete($tools->gambar);
-        // }
+        DB::beginTransaction();
 
-        // $namaAlat = $tools->nama_alat;
-        // $tools->delete();
+        try {
+            if ($tool->gambar && Storage::disk('public')->exists($tool->gambar)) {
+                Storage::disk('public')->delete($tool->gambar);
+            }
 
-        // ActivityLog::record('Hapus Alat', "Mengahpus Alat: " . $namaAlat  );
-        // return redirect()->route('tools.index')->with('success','Alat Berhasil dihapus.');
+            $namaAlat = $tool->nama_alat;
+            $tool->delete();
 
-         // Hapus file gambar dari storage jika ada
-        if ($tool->gambar && Storage::disk('public')->exists($tool->gambar)) {
-            Storage::disk('public')->delete($tool->gambar);
+            ActivityLog::record('Hapus Alat', 'Menghapus alat: ' . $namaAlat);
+
+            DB::commit();
+
+            return redirect()->route('tools.index')->with('success', 'Alat berhasil dihapus.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            Log::error('Gagal destroy tools: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem.')->withInput();
         }
-
-        $namaAlat = $tool->nama_alat;
-        $tool->delete();
-
-        ActivityLog::record('Hapus Alat', 'Menghapus alat: ' . $namaAlat);
-
-        return redirect()->route('tools.index')->with('success', 'Alat berhasil dihapus.');
     }
 }

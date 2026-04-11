@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\ActivityLog;
 use App\Models\Loan;
 use App\Models\Tools;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PeminjamController extends Controller
 {
@@ -16,8 +19,10 @@ class PeminjamController extends Controller
 
         if($request->filled('search')){
             $search = $request->search;
-            $query->where('nama_alat', 'like', '%' . $search . '%');
-                // ->orWhere('category_id', 'like', '%' . $search . '%');
+            $query->where('nama_alat', 'like', '%' . $search . '%')
+                ->orWhereHas('category', function($q) use ($search) {
+                    $q->where('nama_kategori', 'like', '%' . $search . '%');
+                });
         }
 
         $tools = $query->latest()->paginate(10)->withQueryString();
@@ -25,6 +30,8 @@ class PeminjamController extends Controller
     }
 
     public function store(Request $request){
+        DB::beginTransaction();
+        try{
          $tool = Tools::find($request->tool_id);
         if($tool->stok > 0) {
             Loan::create([
@@ -36,8 +43,15 @@ class PeminjamController extends Controller
             ]);
             ActivityLog::record('Tambah Alat', 'Menambahkan alat baru: ' . $request->nama_alat);
 
+            DB::commit();
             // Opsional: Kurangi stok langsung atau saat disetujui (tergantung logika bisnis)
             return back()->with('success', 'Pengajuan berhasil, menunggu persetujuan.');
+        }
+        }catch(Exception $e){
+            DB::rollBack();
+
+            Log::error('gagal Store peminjaman:' . $e->getMessage());
+            return redirect()->back()->with('error', 'terjadi kesalahan Sistem.')->withInput();
         }
     }
 
