@@ -55,11 +55,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($activeLoans as $active)
+                    @foreach ($activeLoans->merge($waiting) as $active)
                         <tr>
                             <td>{{ $active->user->name }}</td>
                             <td>{{ $active->tool->nama_alat }}</td>
-                            <td><span class="badge bg-primary">{{ $active->status }}</span></td>
+                            <td>
+                                {{-- <span class="badge bg-primary">{{ $active->status }}</span> --}}
+                                @if ($active->status == 'disetujui')
+                                    <span class="badge bg-primary">disetujui</span>
+                                @elseif($active->status == 'menunggu_konfirmasi')
+                                    <span class="badge bg-warning text-dark">Selesai</span>
+                                @endif
+                            </td>
 
                             {{-- Kolom denda --}}
                             <td>

@@ -53,4 +53,5 @@ Route::middleware(['auth','role:peminjam'])->group(function(){
     Route::get('/peminjam/dashboard',[PeminjamController::class,'index'])->name('peminjam.dashboard');
     Route::post('/peminjam/ajukan',[PeminjamController::class,'store']);
     Route::get('/peminjam/riwayat',[PeminjamController::class,'history']);
+    route::post('/peminjam/return/{id}',[PeminjamController::class,'return'])->name('peminjam.return');
 });

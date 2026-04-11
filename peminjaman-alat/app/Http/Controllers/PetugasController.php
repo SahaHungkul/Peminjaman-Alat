@@ -15,10 +15,11 @@ class PetugasController extends Controller
     public function index(){
         $loans = Loan::where('status', 'pending')->with(['user', 'tool'])->get();
         $activeLoans = Loan::where('status', 'disetujui')->with(['user', 'tool'])->get();
+        $waiting = Loan::where('status', 'menunggu_konfirmasi')->with(['user', 'tool'])->get();
 
         $sudahDikembalikan = Loan::where('status', 'kembali')->with(['user', 'tool'])->get();
 
-        return view('petugas.dashboard',compact('loans','activeLoans','sudahDikembalikan'));
+        return view('petugas.dashboard',compact('loans','activeLoans','sudahDikembalikan','waiting'));
     }
 
     public function approve($id){
@@ -75,6 +76,7 @@ class PetugasController extends Controller
             return redirect()->back()->with('error', 'terjadi kesalahan Sistem.')->withInput();
         }
     }
+
 
     public function report(Request $request){
         $loans = Loan::with(['user','tool'])->get();
