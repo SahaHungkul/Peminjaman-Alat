@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" data-bs-theme="light">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -11,9 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -43,6 +41,71 @@
         .nav-link:hover,
         .nav-link.show {
             color: #000 !important;
+        }
+
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #6c757d;
+            transition: 0.3s;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px;
+        }
+
+        .slider .sun-icon,
+        .slider .moon-icon {
+            font-size: 14px;
+            color: white;
+            z-index: 1;
+            transition: 0.3s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #0d6efd;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(30px);
+        }
+
+        [data-bs-theme="dark"] .slider {
+            background-color: #0d6efd;
+        }
+
+        [data-bs-theme="dark"] .slider:before {
+            transform: translateX(30px);
         }
 
         .card {
@@ -155,7 +218,17 @@
                                     </form>
                                 </li>
                             </ul>
-
+                        </li>
+                        <li class="nav-item ms-2">
+                            <div class="theme-toggle-wrapper">
+                                <label class="theme-switch" for="themeSwitch">
+                                    <input type="checkbox" id="themeSwitch">
+                                    <span class="slider">
+                                        <i class="bi bi-sun-fill sun-icon"></i>
+                                        <i class="bi bi-moon-fill moon-icon"></i>
+                                    </span>
+                                </label>
+                            </div>
                         </li>
                     @else
                         <li class="nav-item">
@@ -191,6 +264,31 @@
     </footer>
 
     {{-- Script dipindah ke paling bawah sebelum penutup body --}}
+    <script>
+        (function() {
+            const htmlElement = document.documentElement;
+            const themeSwitch = document.getElementById('themeSwitch');
+
+            const savedTheme = localStorage.getItem('user-theme') || 'light';
+            if (savedTheme === 'dark') {
+                htmlElement.setAttribute('data-bs-theme', 'dark');
+                themeSwitch.checked = true;
+            } else {
+                htmlElement.removeAttribute('data-bs-theme');
+                themeSwitch.checked = false;
+            }
+
+            themeSwitch.addEventListener('change', function() {
+                if (this.checked) {
+                    htmlElement.setAttribute('data-bs-theme', 'dark');
+                    localStorage.setItem('user-theme', 'dark');
+                } else {
+                    htmlElement.removeAttribute('data-bs-theme');
+                    localStorage.setItem('user-theme', 'light');
+                }
+            });
+        })();
+    </script>
 </body>
 
 </html>
