@@ -5,7 +5,7 @@
         <div class="col-md-5 col-lg-4">
             {{-- Logo atau Nama Brand di atas Card --}}
             <div class="text-center mb-4">
-                <h2 class="fw-bold text-dark">
+                <h2 class="fw-bold">
                     <i class="bi bi-tools text-primary"></i> PINJAMIN AJA
                 </h2>
                 <p class="text-muted">Silahkan masuk ke akun Anda</p>

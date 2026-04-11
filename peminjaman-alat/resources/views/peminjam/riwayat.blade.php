@@ -11,6 +11,7 @@
                         <th>Tgl Pinjam</th>
                         <th>Rencana Kembali</th>
                         <th>Status</th>
+                        <th>aksi</th>
                         <th>Catatan</th>
                     </tr>
                 </thead>
@@ -26,17 +27,34 @@
                                 @elseif($loan->status == 'disetujui')
                                     <span class="badge bg-primary">Sedang Dipinjam</span>
                                 @elseif($loan->status == 'kembali')
-                                    <span class="badge bg-success">Sudah Dikembalikan</span>
+                                    <span class="badge bg-success">Dikonfirmasi</span>
+                                @elseif($loan->status == 'menunggu_konfirmasi')
+                                    <span class="badge bg-primary">Selesai</span>
                                 @elseif($loan->status == 'ditolak')
                                     <span class="badge bg-danger">Ditolak</span>
                                 @endif
                             </td>
                             <td>
                                 @if ($loan->status == 'disetujui')
-                                    <small class="text-muted">Harap kembalikan ke petugas sebelum tanggal
-                                        rencana.</small>
+                                    <form action="{{ route('peminjam.return', $loan->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-warning btn-sm">
+                                            <i class="bi bi-arrow-return-left"></i> kembalikan
+                                        </button>
+                                    </form>
+                                @else
+                                <span>-</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($loan->status == 'menunggu_konfirmasi')
+                                    <span class="badge bg-info text-dark">
+                                        <i class="bi bi-clock-history"></i> Menunggu Dicek Petugas
+                                    </span>
                                 @elseif($loan->status == 'kembali')
-                                    <small class="text-success">Diterima tanggal {{ $loan->tanggal_kembali_aktual }}</small>
+                                    <span class="badge bg-success">Selesai / Dikembalikan</span>
+                                @else
+                                    <span>-</span>
                                 @endif
                             </td>
                         </tr>

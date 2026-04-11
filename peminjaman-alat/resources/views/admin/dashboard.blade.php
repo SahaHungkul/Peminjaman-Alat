@@ -95,12 +95,12 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header bg-light fw-bold">
+                <div class="card-header bg-secondary text-white fw-bold">
                     Aktivitas Sistem Terakhir
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-hover mb-0">
-                        <thead class="table-light">
+                        <thead class="table">
                             <tr>
                                 <th>Waktu</th>
                                 <th>User</th>

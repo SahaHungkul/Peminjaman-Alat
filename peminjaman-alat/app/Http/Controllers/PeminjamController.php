@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+use function Symfony\Component\Clock\now;
+
 class PeminjamController extends Controller
 {
     public function index(Request $request) {
@@ -52,6 +54,17 @@ class PeminjamController extends Controller
 
             Log::error('gagal Store peminjaman:' . $e->getMessage());
             return redirect()->back()->with('error', 'terjadi kesalahan Sistem.')->withInput();
+        }
+    }
+    public function return($id){
+        $loan = Loan::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+        if($loan->status == 'disetujui'){
+            $loan->update([
+                'status' => 'menunggu_konfirmasi',
+                'tanggal_kembali_aktual' => now()
+            ]);
+            return redirect()->back()->with('success','menunggu pengembalian di konfirmasi');
         }
     }
 
