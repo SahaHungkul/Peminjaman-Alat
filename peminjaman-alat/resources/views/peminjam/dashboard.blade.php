@@ -3,14 +3,14 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1">Eksplorasi Alat</h3>
+            <h3 class="fw-bold mb-1">Eksplorasi Alat</h3>
             <p class="text-muted small">Pilih perlengkapan yang kamu butuhkan untuk praktik hari ini.</p>
         </div>
 
         {{-- Form Pencarian --}}
         <form action="{{ route('peminjam.dashboard') }}" method="GET" class="d-flex gap-2">
             <div class="input-group shadow-sm">
-                <span class="input-group-text bg-white border-end-0">
+                <span class="input-group-text border-end-0">
                     <i class="bi bi-search text-muted"></i>
                 </span>
                 <input type="text" name="search" class="form-control border-start-0 ps-0" value="{{ request('search') }}"
@@ -44,7 +44,7 @@
                     </div>
 
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-dark mb-1">{{ $tool->nama_alat }}</h5>
+                        <h5 class="card-title fw-bold mb-1">{{ $tool->nama_alat }}</h5>
                         <p class="text-muted small mb-3 grow">{{ Str::limit($tool->deskripsi, 80) }}</p>
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -63,10 +63,10 @@
                                 <div class="mb-3">
                                     <label class="form-label small fw-semibold mb-1">Rencana Pengembalian</label>
                                     <div class="input-group input-group-sm">
-                                        <span class="input-group-text bg-light border-end-0"><i
+                                        <span class="input-group-text border-end-0"><i
                                                 class="bi bi-calendar-event"></i></span>
                                         <input type="date" name="tanggal_kembali"
-                                            class="form-control bg-light border-start-0" required
+                                            class="form-control  border-start-0" required
                                             min="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
