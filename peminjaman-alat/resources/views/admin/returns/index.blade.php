@@ -79,6 +79,10 @@
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm">Hapus</button>
                                 </form>
+                                <button type="button" class="btn btn-info btn-sm text-white" data-bs-toggle="modal"
+                                    data-bs-target="#viewPhoto{{ $r->id }}">
+                                    <i class="bi bi-camera"></i> Bukti
+                                </button>
                             </td>
                         </tr>
                     @empty
@@ -88,6 +92,33 @@
                     @endforelse
                 </tbody>
             </table>
+            <div class="modal fade" id="viewPhoto{{ $r->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Bukti Pengembalian - {{ $r->tool->nama_alat }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            @if ($r->gambar)
+                                <img src="{{ asset('storage/' . $r->gambar) }}" class="img-fluid rounded shadow"
+                                    alt="Foto Bukti">
+                                @if ($r->catatan_petugas)
+                                    <div class="mt-3 p-2 bg-light border rounded">
+                                        <strong>Catatan Petugas:</strong><br>
+                                        <span class="text-muted small">{{ $r->catatan_petugas }}</span>
+                                    </div>
+                                @endif
+                            @else
+                                <div class="py-5 text-muted">
+                                    <i class="bi bi-image" style="font-size: 3rem;"></i><br>
+                                    Tidak ada foto bukti yang diunggah.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="mt-3">{{ $returns->links('pagination::bootstrap-5') }}</div>
         </div>
     </div>

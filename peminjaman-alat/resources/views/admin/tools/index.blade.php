@@ -20,7 +20,7 @@
                             <th>Nama Alat</th>
                             <th>Kategori</th>
                             <th>Stok</th>
-                            <th width="15%">Aksi</th>
+                            <th width="20%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>

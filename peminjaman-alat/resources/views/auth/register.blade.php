@@ -22,10 +22,10 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Nama Lengkap</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
+                                <span class="input-group-text border-end-0">
                                     <i class="bi bi-person text-muted"></i>
                                 </span>
-                                <input type="text" name="name" class="form-control bg-light border-start-0 ps-0"
+                                <input type="text" name="name" class="form-control  border-start-0 ps-0"
                                     placeholder="Nama lengkap Anda" required autofocus>
                             </div>
                         </div>
@@ -34,10 +34,10 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Alamat Email</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
+                                <span class="input-group-text border-end-0">
                                     <i class="bi bi-envelope text-muted"></i>
                                 </span>
-                                <input type="email" name="email" class="form-control bg-light border-start-0 ps-0"
+                                <input type="email" name="email" class="form-control border-start-0 ps-0"
                                     placeholder="akun@app.com" required>
                             </div>
                         </div>
@@ -47,10 +47,10 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold">Password</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
+                                    <span class="input-group-text border-end-0">
                                         <i class="bi bi-lock text-muted"></i>
                                     </span>
-                                    <input type="password" name="password" class="form-control bg-light border-start-0 ps-0"
+                                    <input type="password" name="password" class="form-control border-start-0 ps-0"
                                         placeholder="••••••••" required>
                                 </div>
                             </div>
@@ -59,11 +59,11 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-semibold">Konfirmasi</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
+                                    <span class="input-group-text border-end-0">
                                         <i class="bi bi-shield-check text-muted"></i>
                                     </span>
                                     <input type="password" name="password_confirmation"
-                                        class="form-control bg-light border-start-0 ps-0" placeholder="••••••••" required>
+                                        class="form-control border-start-0 ps-0" placeholder="••••••••" required>
                                 </div>
                             </div>
                         </div>

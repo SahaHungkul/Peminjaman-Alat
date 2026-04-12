@@ -22,10 +22,10 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Alamat Email</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
+                                <span class="input-group-text border-end-0">
                                     <i class="bi bi-envelope text-muted"></i>
                                 </span>
-                                <input type="email" name="email" class="form-control bg-light border-start-0 ps-0"
+                                <input type="email" name="email" class="form-control border-start-0 ps-0"
                                        placeholder="akun@app.com" required autofocus>
                             </div>
                         </div>
@@ -36,10 +36,10 @@
                                 <label class="form-label fw-semibold">Password</label>
                             </div>
                             <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
+                                <span class="input-group-text border-end-0">
                                     <i class="bi bi-lock text-muted"></i>
                                 </span>
-                                <input type="password" name="password" class="form-control bg-light border-start-0 ps-0"
+                                <input type="password" name="password" class="form-control border-start-0 ps-0"
                                        placeholder="••••••••" required>
                             </div>
                         </div>
