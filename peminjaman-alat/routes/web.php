@@ -36,19 +36,19 @@ route::middleware(['auth','role:admin'])->group(function(){
     route::resource('categories',CategoryController::class);
     Route::resource('admin/loans',AdminLoanController::class)->names('admin.loans');
     route::resource('admin/returns',AdminReturnController::class)->names('admin.returns');
-    Route::patch('/admin/{id}/returns',[AdminReturnController::class,'konfirmasibayar'])->name('admin.returns.bayar');
     Route::get('/admin/logs',function(){
         $recentLog = ActivityLog::with('user')->latest()->paginate(20);
         return view('admin.logs',compact('recentLog'));
-    });
-});
+        });
+        });
 
-Route::middleware(['auth','role:petugas'])->group(function(){
-    Route::get('/petugas/dashboard',[PetugasController::class,'index']);
-    Route::post('/petugas/approve/{id}',[PetugasController::class,'approve']);
-    Route::post('/petugas/reject/{id}',[PetugasController::class,'reject']);
-    Route::post('/petugas/return/{id}',[PetugasController::class,'processReturn']);
-    Route::get('/petugas/laporan',[PetugasController::class,'report']);
+        Route::middleware(['auth','role:petugas'])->group(function(){
+            Route::get('/petugas/dashboard',[PetugasController::class,'index']);
+            Route::post('/petugas/approve/{id}',[PetugasController::class,'approve']);
+            Route::post('/petugas/reject/{id}',[PetugasController::class,'reject']);
+            Route::post('/petugas/return/{id}',[PetugasController::class,'processReturn']);
+            Route::get('/petugas/laporan',[PetugasController::class,'report']);
+            Route::patch('/petugas/{id}/bayar',[PetugasController::class,'konfirmasibayar'])->name('petugas.bayar');
 });
 Route::middleware(['auth','role:peminjam'])->group(function(){
     Route::get('/peminjam/dashboard',[PeminjamController::class,'index'])->name('peminjam.dashboard');

@@ -72,7 +72,8 @@ class PeminjamController extends Controller
         $loans = Loan::where('user_id', Auth::id())
                     ->with('tool')
                     ->orderBy('created_at', 'desc')
-                    ->get();
+                    ->latest()
+                    ->paginate(10);
         return view('peminjam.riwayat', compact('loans'));
     }
 }

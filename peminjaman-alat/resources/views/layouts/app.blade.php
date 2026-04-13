@@ -219,25 +219,26 @@
                                 </li>
                             </ul>
                         </li>
+                        <ul class="navbar-nav ms-auto align-items-center">
+                            <li class="nav-item ms-2">
+                                <div class="theme-toggle-wrapper">
+                                    <label class="theme-switch" for="themeSwitch">
+                                        <input type="checkbox" id="themeSwitch">
+                                        <span class="slider">
+                                            <i class="bi bi-sun-fill sun-icon"></i>
+                                            <i class="bi bi-moon-fill moon-icon"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
                     @else
                         <li class="nav-item">
                             <a href="{{ route('login') }}" class="btn btn-primary btn-sm px-4">Login</a>
                         </li>
                     @endauth
                 </ul>
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item ms-2">
-                        <div class="theme-toggle-wrapper">
-                            <label class="theme-switch" for="themeSwitch">
-                                <input type="checkbox" id="themeSwitch">
-                                <span class="slider">
-                                    <i class="bi bi-sun-fill sun-icon"></i>
-                                    <i class="bi bi-moon-fill moon-icon"></i>
-                                </span>
-                            </label>
-                        </div>
-                    </li>
-                </ul>
+
             </div>
         </div>
     </nav>
