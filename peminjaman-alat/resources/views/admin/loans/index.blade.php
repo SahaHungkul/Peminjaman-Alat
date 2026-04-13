@@ -35,7 +35,9 @@
                                 @if ($loan->status == 'pending')
                                     <span class="badge bg-warning">Pending</span>
                                 @elseif($loan->status == 'disetujui')
-                                    <span class="badge bg-primary">Sudah Dipinjam</span>
+                                    <span class="badge bg-primary">Dipinjam</span>
+                                @elseif($loan->status == 'menunggu_konfirmasi')
+                                    <span class="badge bg-primary">Selesai</span>
                                 @elseif($loan->status == 'kembali')
                                     @if ($loan->tanggal_kembali_aktual > $loan->tanggal_kembali_rencana)
                                         <span class="badge bg-danger">Kembali (Terlambat)</span>

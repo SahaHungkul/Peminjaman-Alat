@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Loan;
 use App\Models\Tools;
 use Exception;
@@ -104,6 +105,31 @@ class PetugasController extends Controller
             DB::rollBack();
 
             Log::error('gagal memproses pengembalian:' . $e->getMessage());
+            return redirect()->back()->with('error', 'terjadi kesalahan Sistem.')->withInput();
+        }
+    }
+
+    public function konfirmasiBayar($id){
+        DB::beginTransaction();
+        try{
+        $loan = Loan::findOrFail($id);
+
+        if($loan->denda <= 0 || $loan->status_denda == 'tidak_ada'){
+            return back()->with('error','tidak ada denda pada peminjamanini');
+        }
+
+        $loan->update([
+            'status_denda' => 'lunas'
+        ]);
+        ActivityLog::record('Pembayaran Denda','Konfirmasi pembayaran denda:' . $loan->tool->nama_alat);
+
+        // return redirect()->route('admin.loans.index')->with('success','denda lunas');
+        DB::commit();
+        return back()->with('success','denda lunas');
+        }catch(Exception $e){
+            DB::rollBack();
+
+            Log::error('gagal konfirmasi bayar:' . $e->getMessage());
             return redirect()->back()->with('error', 'terjadi kesalahan Sistem.')->withInput();
         }
     }

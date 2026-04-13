@@ -110,11 +110,15 @@ class AdminReturnController extends Controller
         $loan = Loan::findOrFail($id);
 
         $request->validate([
-            'tanggal_kembali_aktual' => 'required|date'
+            'tanggal_kembali_aktual' => 'required|date',
+            'denda' => 'required|integer|min:0',
+            'status_denda' => 'required|in:tidak_ada,belum_bayar,lunas'
         ]);
 
         $loan->update([
-            'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual
+            'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual,
+            'denda' => $request->denda,
+            'status_denda' => $request->status_denda,
         ]);
 
         DB::commit();

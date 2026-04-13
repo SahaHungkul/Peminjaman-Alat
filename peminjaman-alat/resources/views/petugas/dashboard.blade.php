@@ -112,8 +112,8 @@
                     <tr>
                         <th>Peminjam</th>
                         <th>Alat</th>
-                        <th>Status</th>
-                        <th style="width: 20%">Bukti</th>
+                        <th>denda & Status</th>
+                        <th style="width: 20%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -121,12 +121,34 @@
                         <tr>
                             <td>{{ $sudah->user->name }}</td>
                             <td>{{ $sudah->tool->nama_alat }}</td>
-                            <td><span class="badge bg-primary">{{ $sudah->status }}</span></td>
+                            <td>
+                                @if ($sudah->denda > 0)
+                                    <div class="fw-bold text-danger">Rp {{ number_format($sudah->denda, 0, ',', '.') }}
+                                    </div>
+                                    @if ($sudah->status_denda == 'belum_bayar')
+                                        <span class="badge bg-danger">Belum Lunas</span>
+                                        <form action="{{ route('petugas.bayar', $sudah->id) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-link btn-sm p-0 text-success fw-bold"
+                                                onclick="return confirm('Konfirmasi pelunasan denda?')">
+                                                [Tandai Lunas]
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="badge bg-success">Lunas</span>
+                                    @endif
+                                @else
+                                <span class="text-muted small"> - </span>
+                                @endif
+                                {{-- <span class="badge bg-primary">{{ $sudah->status }}</span> --}}
+                            </td>
                             <td>
                                 @if ($sudah->gambar)
-                                    <button type="button" class="btn btn-sm" data-bs-toggle="modal"
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#modalBukti{{ $sudah->id }}">
-                                        <i class="bi bi-eye"></i>
+                                        <i class="bi bi-camera"></i>
                                     </button>
 
                                     <div class="modal fade" id="modalBukti{{ $sudah->id }}" tabindex="-1"
