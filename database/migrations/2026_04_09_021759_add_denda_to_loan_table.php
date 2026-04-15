@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->integer('denda')->default(0)->after('tanggal_kembali_aktual');
+            $table->decimal('denda', 15, 2)->default(0)->after('tanggal_kembali_aktual');
             $table->enum('status_denda',['belum_bayar','lunas','tidak_ada'])->default('tidak_ada')->after('denda');
         });
     }

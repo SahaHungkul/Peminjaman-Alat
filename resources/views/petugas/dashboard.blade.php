@@ -63,44 +63,58 @@
                 <tbody>
                     @foreach ($activeLoans as $active)
                         <tr>
-                            <td>{{ $active->user->name }}</td>
+                            <td>{{ $active->user->name }} {{ $active->denda_saat_ini }}</td>
                             <td>{{ $active->tool->nama_alat }} x{{ $active->qty }}</td>
-                            <td>{{ $active->tanggal_pinjam }} <br>
-                                <small class="text-muted">hingga: {{ $active->tanggal_kembali_rencana }}</small>
-                            </td>
                             <td>
-                                {{-- <span class="badge bg-primary">{{ $active->status }}</span> --}}
+                                {{ $active->tanggal_pinjam->format('Y-m-d') }} <br>
+                                <small class="text-muted">hingga:
+                                    {{ $active->tanggal_kembali_rencana->format('Y-m-d') }}</small>
+                            </td>
+
+                            <td>
                                 @if ($active->status == 'disetujui')
-                                    <span class="badge bg-primary">disetujui</span>
+                                    {{-- Bandingkan tanggal hari ini dengan rencana kembali --}}
+                                    @if (now()->startOfDay()->gt($active->tanggal_kembali_rencana->startOfDay()))
+                                        <span class="badge bg-danger">Terlambat</span>
+                                    @else
+                                        <span class="badge bg-primary">Sedang Dipinjam</span>
+                                    @endif
                                 @else
-                                    <span class="badge bg-warning text-dark">Selesai</span>
+                                    <span class="badge bg-secondary">{{ $active->status }}</span>
                                 @endif
                             </td>
 
-                            <form action="{{ url('/petugas/return/' . $active->id) }}" method="POST"
-                                id="form-return-{{ $active->id }}" enctype="multipart/form-data">
-                                @csrf
-                                {{-- Kolom denda --}}
+                            {{-- Kolom Denda --}}
+                            <td>
+                                @if ($active->denda_saat_ini > 0)
+                                    <span class="text-danger fw-bold">
+                                        Rp {{ number_format($active->denda_saat_ini, 0, ',', '.') }}
+                                    </span>
+                                    <small class="d-block text-muted">
+                                        Telat
+                                        {{ now()->startOfDay()->diffInDays($active->tanggal_kembali_rencana->startOfDay()) }}
+                                        hari
+                                    </small>
+                                @else
+                                    <span class="text-success">0</span>
+                                @endif
+                            </td>
 
-                                <td>
-                                    <input type="number" name="denda" class="form-control form-control-sm" min="0"
-                                        value="0" style="width: 130px" placeholder="0">
-                                    <small class="text-muted">Isi 0 jika tidak ada denda</small>
-                                </td>
-
-                                <td>
-                                    <input type="file" name="gambar" class="form-control form-control-sm"
-                                        accept="image/*" required style="width: 200px">
-                                </td>
-
-                                <td>
-                                    <button type="submit" form="form-return-{{ $active->id }}"
-                                        class="btn btn-primary btn-sm"
-                                        onclick="return confirm('Konfirmasi pengembalian alat?')">
-                                        <i class="bi bi-check"></i>
-                                    </button>
-                                </td>
-                            </form>
+                            {{-- Kolom Aksi (Input File & Button) --}}
+                            <td colspan="2">
+                                <form action="{{ url('/petugas/return/' . $active->id) }}" method="POST"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="d-flex gap-2">
+                                        <input type="file" name="gambar" class="form-control form-control-sm"
+                                            accept="image/*" required style="width: 200px">
+                                        <button type="submit" class="btn btn-primary btn-sm"
+                                            onclick="return confirm('Konfirmasi pengembalian alat?')">
+                                            <i class="bi bi-check"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -128,12 +142,14 @@
                         <tr>
                             <td>{{ $sudah->user->name }}</td>
                             <td>{{ $sudah->tool->nama_alat }} x{{ $sudah->qty }}</td>
-                            <td>{{ $sudah->tanggal_pinjam }} {{ $sudah->tanggal_kembali_rencana }} <br>
-                                <small class="text-muted">Kembali: {{ $sudah->tanggal_kembali_aktual }}</small>
+                            <td>{{ $sudah->tanggal_pinjam }} {{ $sudah->tanggal_kembali_rencana->format('Y-m-d') }} <br>
+                                <small class="text-muted">Kembali:
+                                    {{ $sudah->tanggal_kembali_aktual->format('Y-m-d') }}</small>
                             </td>
                             <td>
                                 @if ($sudah->denda > 0)
-                                    <div class="fw-bold text-danger">Rp {{ number_format($sudah->denda, 0, ',', '.') }}
+                                    <div class="fw-bold text-danger">
+                                        Rp {{ number_format($sudah->denda, 0, ',', '.') }}
                                     </div>
                                     @if ($sudah->status_denda == 'belum_bayar')
                                         <span class="badge bg-danger">Belum Lunas</span>
@@ -143,7 +159,7 @@
                                             @method('PATCH')
                                             <button type="submit" class="btn btn-link btn-sm p-0 text-success fw-bold"
                                                 onclick="return confirm('Konfirmasi pelunasan denda?')">
-                                                [Tandai Lunas]
+                                                <i class="bi bi-currency-dollar"></i>
                                             </button>
                                         </form>
                                     @else

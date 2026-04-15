@@ -111,11 +111,6 @@ class AdminLoanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        DB::beginTransaction();
-        try {
-        $loan = Loan::findOrFail($id);
-        $tool = Tools::findOrFail($request->tool_id);
-
         $request->validate([
             'user_id' => 'required',
             'tool_id' => 'required',
@@ -124,23 +119,30 @@ class AdminLoanController extends Controller
             'status' => 'required'
         ]);
 
+        DB::beginTransaction();
+        try {
+        $loan = Loan::findOrFail($id);
+        $tool = Tools::findOrFail($request->tool_id);
 
             if ($loan->status == 'pending' && $request->status == 'disetujui') {
                 if ($tool->stok < 1) {
                     return back()->with('error', 'Stok alat kosong, tidak bisa set status Disetujui.');
                 }
 
-                $tool->decrement('stok');
+                $tool->decrement('stok', $loan->qty);
             } elseif ($loan->status == 'disetujui' && $request->status == 'kembali') {
-                $tool->increment('stok');
+                $tool->increment('stok', $loan->qty);
                 $request->merge(['tanggal_kembali_aktual' => now()]);
             } elseif ($loan->status == 'disetujui' && $request->status == 'pending') {
-                $tool->increment('stok');
+                $tool->increment('stok', $loan->qty);
+            } elseif($loan->status == 'kembali' && $request->status == 'disetujui'){
+                $tool->decrement('stok', $loan->qty);
             }
 
             $loan->update([
                 'user_id' => $request->user_id,
                 'tool_id' => $request->tool_id,
+                'qty' => $request->qty,
                 'tanggal_pinjam' => $request->tanggal_pinjam,
                 'tanggal_kembali_rencana' => $request->tanggal_kembali_rencana,
                 'status' => $request->status,

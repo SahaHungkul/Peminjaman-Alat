@@ -26,7 +26,7 @@
                         <tr>
                             <td>{{ $returns->firstItem() + $key }}</td>
                             <td>{{ $r->user->name }}</td>
-                            <td>{{ $r->tool->nama_alat }}</td>
+                            <td>{{ $r->tool->nama_alat }} x{{ $r->qty }}</td>
                             <td>{{ $r->tanggal_pinjam }}</td>
                             <td>
                                 {{ $r->tanggal_kembali_aktual }}

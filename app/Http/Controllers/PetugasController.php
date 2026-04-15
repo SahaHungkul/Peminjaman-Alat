@@ -73,7 +73,7 @@ class PetugasController extends Controller
         DB::beginTransaction();
         try{
             $request->validate([
-                'denda' => 'nullable|integer|min:0',
+                // 'denda' => 'nullable|integer|min:0',
                 'gambar' => 'required|image|mimes:jpeg,jpg,png|max:2048',
             ]);
 
@@ -85,18 +85,17 @@ class PetugasController extends Controller
                 $path = $request->file('gambar')->store('gambar', 'public');
             }
 
-            $denda = $request->denda ?? 0;
+            $total = $loan->denda_saat_ini;
             $loan->update([
                 'status' => 'kembali',
                 'tanggal_kembali_aktual' =>now(),
-                'denda' => $denda,
-                'status_denda' => $denda > 0 ? 'belum_bayar' : 'tidak_ada',
+                'denda' => $total,
+                'status_denda' => $total > 0 ? 'belum_bayar' : 'tidak_ada',
                 'petugas_id' => Auth::id(),
                 'gambar' => $path,
             ]);
 
-            $tool = Tools::find($loan->tool_id);
-            $tool->increment('stok', $loan->qty);
+            $loan->tool->increment('stok', $loan->qty);
 
             DB::commit();
             return back()->with('success','Alat telah dikembalikan.');

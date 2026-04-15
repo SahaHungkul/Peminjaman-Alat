@@ -36,17 +36,17 @@ class ToolsController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nama_alat' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'stok' => 'required|integer|min:0',
+            // 'denda_per_hari' => 'required|',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'deskripsi' => 'nullable|string'
+        ]);
         DB::beginTransaction();
 
         try {
-            $request->validate([
-                'nama_alat' => 'required|string|max:255',
-                'category_id' => 'required|exists:categories,id',
-                'stok' => 'required|integer|min:0',
-                'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-                'deskripsi' => 'nullable|string'
-            ]);
-
             $gambarPath = null;
             if ($request->hasFile('gambar')) {
                 $gambarPath = $request->file('gambar')->store('tools', 'public');

@@ -19,8 +19,9 @@
                             <th width="15%">Gambar</th>
                             <th>Nama Alat</th>
                             <th>Kategori</th>
+                            <th>Denda</th>
                             <th>Stok</th>
-                            <th width="20%">Aksi</th>
+                            <th width="15%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +42,9 @@
                                 </td>
                                 <td>
                                     <span>{{ $tool->category->nama_kategori }}</span>
+                                </td>
+                                <td>
+                                    RP{{number_format($tool->denda_per_hari,0,',','.') }}
                                 </td>
                                 <td>{{ $tool->stok }}
                                     @if ($tool->stok <= 2 && $tool->stok > 0)

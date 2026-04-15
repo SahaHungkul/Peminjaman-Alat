@@ -27,9 +27,9 @@
                         <tr>
                             <td>{{ $loans->firstItem() + $key }}</td>
                             <td>{{ $loan->user->name }}</td>
-                            <td>{{ $loan->tool->nama_alat }}</td>
+                            <td>{{ $loan->tool->nama_alat }} x{{ $loan->qty }}</td>
                             <td>{{ $loan->tanggal_pinjam }} <br>
-                                <small class="text-muted">Kembali: {{ $loan->tanggal_kembali_rencana }}</small>
+                                <small class="text-muted">Kembali: {{ $loan->tanggal_kembali_rencana->format('Y/m/d') }}</small>
                             </td>
                             <td>
                                 @if ($loan->status == 'pending')

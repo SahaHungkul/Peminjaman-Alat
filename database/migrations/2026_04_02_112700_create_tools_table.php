@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->foreignId('category_id')->constrained('categories');
             $table->integer('stok');
+            $table->decimal('denda_per_hari', 15, 2)->default(5000);
             $table->string('gambar')->nullable();
             $table->timestamps();
         });
