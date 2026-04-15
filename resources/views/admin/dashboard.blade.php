@@ -91,6 +91,86 @@
         </div>
     </div>
 
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success bg-gradient fw-bold border-0 pt-3">
+                    Peminjam Teratas
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-borderless mb-0">
+                        <thead>
+                            <tr class="text-muted small">
+                                <th>Nama Peminjam</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for ($i = 0; $i < 5; $i++)
+                                @php $top = $peminjamTeratas->get($i); @endphp
+                                <tr>
+                                    <td>
+                                        @if ($top)
+                                            <span class="fw-semibold">{{ $top->user->name }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-end">
+                                        @if ($top)
+                                            {{ $top->total_loans }}
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-primary bg-gradient fw-bold border-0 pt-3">
+                    Alat Paling Banyak Dipinjam
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-borderless mb-0">
+                        <thead>
+                            <tr class="text-muted small">
+                                <th>Nama Alat</th>
+                                <th class="text-end">Total Pinjam</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for ($i = 0; $i < 5; $i++)
+                                @php $popular = $alatTerpopuler->get($i); @endphp
+                                <tr>
+                                    <td>
+                                        @if ($popular)
+                                            <span class="fw-semibold">{{ $popular->tool->nama_alat }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-end">
+                                        @if ($popular)
+                                            {{ $popular->total_borrowed }}
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- table start --}}
     <div class="row">
         <div class="col-md-12">
@@ -113,9 +193,10 @@
                                 <tr>
                                     <td class="small text-muted">{{ $log->created_at->diffForHumans() }}</td>
                                     <td>
-                                        <span class="fw-bold">{{ ($log->user->name) }}</span>
+                                        <span class="fw-bold">{{ $log->user->name }}</span>
                                         <br>
-                                        <span class="badge bg-secondary" style="font-size: 0.7em">{{ ucfirst($log->user->role) }}</span>
+                                        <span class="badge bg-secondary"
+                                            style="font-size: 0.7em">{{ ucfirst($log->user->role) }}</span>
                                     </td>
                                     <td>{{ $log->action }}</td>
                                     <td class="text-muted small">{{ Str::limit($log->deskripsi, 50) }}</td>

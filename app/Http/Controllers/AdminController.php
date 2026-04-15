@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Loan;
 use App\Models\Tools;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 // use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -24,6 +26,20 @@ class AdminController extends Controller
         $sudahDikembalikan = Loan::where('status','kembali')->count();
         // data 5 log aktivitas terbaru
         $recentLogs = ActivityLog::with('user')->latest()->take(5)->get();
+        $peminjamTeratas = Loan::select('user_id', DB::raw('count(*) as total_loans'))
+            ->with('user')
+            ->groupBy('user_id')
+            ->orderBy('total_loans', 'desc')
+            ->take(5)
+            ->get();
+            // Di Controller
+        $alatTerpopuler = Loan::select('tool_id', DB::raw('count(*) as total_borrowed'))
+            ->with('tool')
+            ->groupBy('tool_id')
+            ->orderBy('total_borrowed', 'desc')
+            ->take(5)
+            ->get();
+
         return view('admin.dashboard',compact(
             'totalUser',
             'totalAlat',
@@ -31,7 +47,9 @@ class AdminController extends Controller
             'totalKategori',
             'sedangDipinjam',
             'sudahDikembalikan',
-            'recentLogs'
+            'recentLogs',
+            'peminjamTeratas',
+            'alatTerpopuler'
         ));
     }
     public function log(){

@@ -19,7 +19,7 @@
                     @forelse($loans as $loan)
                         <tr>
                             <td>{{ $loan->user->name }}</td>
-                            <td>{{ $loan->tool->nama_alat }}</td>
+                            <td>{{ $loan->tool->nama_alat }} x{{ $loan->qty }}</td>
                             <td>{{ $loan->tanggal_pinjam }}</td>
                             <td>{{ $loan->tanggal_kembali_rencana }}</td>
                             <td>
@@ -53,6 +53,7 @@
                     <tr>
                         <th>Peminjam</th>
                         <th>Alat</th>
+                        <th>Tanggal</th>
                         <th>Status</th>
                         <th>Denda</th>
                         <th>Bukti</th>
@@ -63,7 +64,10 @@
                     @foreach ($activeLoans as $active)
                         <tr>
                             <td>{{ $active->user->name }}</td>
-                            <td>{{ $active->tool->nama_alat }}</td>
+                            <td>{{ $active->tool->nama_alat }} x{{ $active->qty }}</td>
+                            <td>{{ $active->tanggal_pinjam }} <br>
+                                <small class="text-muted">hingga: {{ $active->tanggal_kembali_rencana }}</small>
+                            </td>
                             <td>
                                 {{-- <span class="badge bg-primary">{{ $active->status }}</span> --}}
                                 @if ($active->status == 'disetujui')
@@ -77,6 +81,7 @@
                                 id="form-return-{{ $active->id }}" enctype="multipart/form-data">
                                 @csrf
                                 {{-- Kolom denda --}}
+
                                 <td>
                                     <input type="number" name="denda" class="form-control form-control-sm" min="0"
                                         value="0" style="width: 130px" placeholder="0">
@@ -87,11 +92,12 @@
                                     <input type="file" name="gambar" class="form-control form-control-sm"
                                         accept="image/*" required style="width: 200px">
                                 </td>
+
                                 <td>
                                     <button type="submit" form="form-return-{{ $active->id }}"
                                         class="btn btn-primary btn-sm"
                                         onclick="return confirm('Konfirmasi pengembalian alat?')">
-                                        Proses Pengembalian
+                                        <i class="bi bi-check"></i>
                                     </button>
                                 </td>
                             </form>
@@ -112,15 +118,19 @@
                     <tr>
                         <th>Peminjam</th>
                         <th>Alat</th>
+                        <th>Tanggal</th>
                         <th>denda & Status</th>
-                        <th style="width: 20%">Aksi</th>
+                        <th style="width: 10%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($sudahDikembalikan as $sudah)
                         <tr>
                             <td>{{ $sudah->user->name }}</td>
-                            <td>{{ $sudah->tool->nama_alat }}</td>
+                            <td>{{ $sudah->tool->nama_alat }} x{{ $sudah->qty }}</td>
+                            <td>{{ $sudah->tanggal_pinjam }} {{ $sudah->tanggal_kembali_rencana }} <br>
+                                <small class="text-muted">Kembali: {{ $sudah->tanggal_kembali_aktual }}</small>
+                            </td>
                             <td>
                                 @if ($sudah->denda > 0)
                                     <div class="fw-bold text-danger">Rp {{ number_format($sudah->denda, 0, ',', '.') }}
@@ -140,7 +150,7 @@
                                         <span class="badge bg-success">Lunas</span>
                                     @endif
                                 @else
-                                <span class="text-muted small"> - </span>
+                                    <span class="text-muted small"> - </span>
                                 @endif
                                 {{-- <span class="badge bg-primary">{{ $sudah->status }}</span> --}}
                             </td>
@@ -164,12 +174,12 @@
                                                 <div class="modal-body text-center ">
                                                     <img src="{{ asset('storage/' . $sudah->gambar) }}"
                                                         class="img-fluid rounded shadow-sm mb-2" alt="Foto Bukti">
-                                                    <div class="text-start mt-3 p-3  border rounded">
+                                                    {{-- <div class="text-start mt-3 p-3  border rounded">
                                                         <p class="mb-1"><strong>Denda:</strong> Rp
                                                             {{ number_format($sudah->denda, 0, ',', '.') }}</p>
                                                         <p class="mb-0 text-muted"><strong>Catatan:</strong>
                                                             {{ $sudah->catatan_petugas ?? 'Tidak ada catatan.' }}</p>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>

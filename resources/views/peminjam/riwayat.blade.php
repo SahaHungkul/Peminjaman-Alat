@@ -17,7 +17,7 @@
                 <tbody>
                     @forelse($loans as $loan)
                         <tr>
-                            <td>{{ $loan->tool->nama_alat }}</td>
+                            <td>{{ $loan->tool->nama_alat }} x{{ $loan->qty }}</td>
                             <td>{{ $loan->tanggal_pinjam }} - {{ $loan->tanggal_kembali_rencana }}</td>
                             <td>
                                 @if ($loan->status == 'pending')

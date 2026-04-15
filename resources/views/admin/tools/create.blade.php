@@ -61,12 +61,17 @@
                                     <label class="form-label">Gambar Alat</label>
                                     <input type="file" name="gambar"
                                         class="form-control @error('gambar') is-invalid
-                                @enderror"
-                                        accept="image/*">
+                                    @enderror"
+                                        accept="image/*" id="inputGambar">
                                     <small class="text-muted">Format: JPG, PNG, Maks: 2MB</small>
                                     @error('gambar')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+
+                                    <div id="containerGambar" class="mt-3 d-none">
+                                        <img id="previewGambar" src="#" alt="none" class="img-thumbnail"
+                                            style="max-height: 170px;">
+                                    </div>
                                 </div>
                             </div>
 
@@ -87,4 +92,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const inputGambar = document.getElementById('inputGambar');
+        const previewContainer = document.getElementById('containerGambar');
+        const gambarPreview = document.getElementById('previewGambar');
+
+        inputGambar.onchange = evt => {
+            const [file] = inputGambar.files;
+
+            if (file) {
+                // 1. Buat URL gambar dari file yang dipilih
+                gambarPreview.src = URL.createObjectURL(file);
+
+                // 2. Munculkan kontainer preview yang tadi disembunyikan
+                previewContainer.classList.remove('d-none');
+            } else {
+                // Jika batal memilih file, sembunyikan kembali
+                previewContainer.classList.add('d-none');
+            }
+        }
+    </script>
 @endsection

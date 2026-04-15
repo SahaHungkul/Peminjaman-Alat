@@ -55,7 +55,7 @@
                                 {{-- kolom gambar --}}
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ganti Gambar (opsional)</label>
-                                    <input type="file" name="gambar"
+                                    <input id="inputGambar" type="file" name="gambar"
                                         class="form-control @error('gambar') is-invalid
                                 @enderror"
                                         accept="image/*">
@@ -66,6 +66,10 @@
                                                 class="img-thumbnail" style="height:80px;">
                                         </div>
                                     @endif
+                                    <div id="containerGambar" class="mt-3 d-none">
+                                        <img id="previewGambar" src="#" alt="none" class="img-thumbnail"
+                                            style="max-height: 170px;">
+                                    </div>
                                 </div>
                             </div>
 
@@ -86,4 +90,24 @@
             </div>
         </div>
     </div>
+    <script>
+        const inputGambar = document.getElementById('inputGambar');
+        const previewContainer = document.getElementById('containerGambar');
+        const gambarPreview = document.getElementById('previewGambar');
+
+        inputGambar.onchange = evt => {
+            const [file] = inputGambar.files;
+
+            if (file) {
+                // 1. Buat URL gambar dari file yang dipilih
+                gambarPreview.src = URL.createObjectURL(file);
+
+                // 2. Munculkan kontainer preview yang tadi disembunyikan
+                previewContainer.classList.remove('d-none');
+            } else {
+                // Jika batal memilih file, sembunyikan kembali
+                previewContainer.classList.add('d-none');
+            }
+        }
+    </script>
 @endsection

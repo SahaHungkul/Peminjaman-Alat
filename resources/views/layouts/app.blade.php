@@ -189,7 +189,7 @@
                             <li class="nav-item"><a class="nav-link" href="/petugas/laporan">Laporan</a></li>
                         @elseif(auth()->user()->role == 'peminjam')
                             <li class="nav-item"><a class="nav-link" href="/peminjam/dashboard">Pinjam Alat</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/peminjam/riwayat">Riwayat</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/peminjam/riwayat">My List</a></li>
                         @endif
                     @endauth
                 </ul>

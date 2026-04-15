@@ -18,7 +18,6 @@ class PetugasController extends Controller
     public function index(){
         $loans = Loan::where('status', 'pending')->with(['user', 'tool'])->paginate(5);
         $activeLoans = Loan::whereIn('status', ['disetujui','menunggu_konfirmasi'])->with(['user', 'tool'])->paginate(5);
-        // $waiting = Loan::where('status', 'menunggu_konfirmasi')->with(['user', 'tool'])->get();
 
         $sudahDikembalikan = Loan::where('status', 'kembali')->with(['user', 'tool'])->latest()->paginate(5);
 
@@ -37,7 +36,7 @@ class PetugasController extends Controller
         ]);
 
         $tool = Tools::find($loan->tool_id);
-        $tool->decrement('stok');
+        $tool->decrement('stok', $loan->qty);
 
         DB::commit();
         return back()->with('success','Peminjaman Disetujui');
@@ -97,7 +96,7 @@ class PetugasController extends Controller
             ]);
 
             $tool = Tools::find($loan->tool_id);
-            $tool->increment('stok');
+            $tool->increment('stok', $loan->qty);
 
             DB::commit();
             return back()->with('success','Alat telah dikembalikan.');

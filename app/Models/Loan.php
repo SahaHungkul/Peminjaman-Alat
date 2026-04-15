@@ -9,6 +9,11 @@ class Loan extends Model
     protected $guarded = [];
     protected $table = 'loans';
 
+    protected $casts = [
+        'tanggal_kembali_aktual' => 'datetime',
+        'tanggal_kembali_rencana' => 'datetime',
+    ];
+
     public function user(){
         return $this->belongsTo(User::class);
     }

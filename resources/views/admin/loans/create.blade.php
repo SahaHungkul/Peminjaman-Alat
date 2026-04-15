@@ -28,6 +28,14 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold mb-1">Jumlah</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text border-end-0"><i class="bi bi-box-seam"></i></span>
+                        <input type="number" name="qty" class="form-control border-start-0" value="1"
+                            min="1" max="{{ $tool->stok }}" required>
+                    </div>
+                </div>
 
                 {{-- kolom tanggal --}}
                 <div class="row mb-3">
