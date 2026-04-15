@@ -5,6 +5,9 @@
         <div class="col-md-5 col-lg-4">
             {{-- Logo atau Nama Brand di atas Card --}}
             <div class="text-center mb-4">
+                @error('email')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
                 <h2 class="fw-bold">
                     <i class="bi bi-tools text-primary"></i> PINJAMIN AJA
                 </h2>

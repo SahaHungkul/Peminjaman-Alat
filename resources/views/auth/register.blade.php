@@ -6,7 +6,7 @@
             {{-- Branding --}}
             <div class="text-center mb-4">
                 <h2 class="fw-bold ">
-                    <i class="bi bi-tools text-primary"></i> PINJMAIN AJA
+                    <i class="bi bi-tools text-primary"></i> PINJAMIN AJA
                 </h2>
                 <p class="text-muted">Buat akun untuk mulai meminjam alat</p>
             </div>

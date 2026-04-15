@@ -32,6 +32,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                <div class="mt-3">{{ $recentLog->links('pagination::bootstrap-5') }}</div>
             </div>
         </div>
     </div>

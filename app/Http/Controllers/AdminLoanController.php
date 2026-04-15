@@ -40,26 +40,28 @@ class AdminLoanController extends Controller
      */
     public function store(Request $request)
     {
-        DB::beginTransaction();
+        $request->validate([
+            'user_id' => 'required',
+            'tool_id' => 'required',
+            'qty' => 'required|integer|min:1',
+            'tanggal_pinjam' => 'required|date',
+            'tanggal_kembali_rencana' => 'required|date',
+            'status' => 'required'
+        ]);
 
+        DB::beginTransaction();
         try {
-            $request->validate([
-                'user_id' => 'required',
-                'tool_id' => 'required',
-                'tanggal_pinjam' => 'required|date',
-                'tanggal_kembali_rencana' => 'required|date|after_or_equal:tanggal_pinjam',
-                'status' => 'required'
-            ]);
 
             $tool = Tools::findOrFail($request->tool_id);
 
-            if ($request->status == 'disetujui' && $tool->stok < 1) {
+            if ($request->status == 'disetujui' && $tool->stok < $request->qty) {
                 return back()->with('error', 'Stok alat kosong, tidak bisa set status Disetujui.');
             }
 
             Loan::create([
                 'user_id' => $request->user_id,
                 'tool_id' => $request->tool_id,
+                'qty' => $request->qty,
                 'tanggal_pinjam' => $request->tanggal_pinjam,
                 'tanggal_kembali_rencana' => $request->tanggal_kembali_rencana,
                 'status' => $request->status,
@@ -67,7 +69,7 @@ class AdminLoanController extends Controller
             ]);
 
             if ($request->status == 'disetujui') {
-                $tool->decrement('stok');
+                $tool->decrement('stok', $request->qty);
             }
 
             ActivityLog::record('Create Loan', 'Admin membuat data pinjaman baru.');

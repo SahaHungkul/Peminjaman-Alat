@@ -64,7 +64,7 @@ class AdminReturnController extends Controller
         ]);
 
         $tool = Tools::findOrFail($loan->tool_id);
-        $tool->increment('stok');
+        $tool->increment('stok',$loan->qty);
 
         ActivityLog::record('Pengembalian Alat', 'Memproses Pengembalian alat: ' .$tool->nama_alat);
 
