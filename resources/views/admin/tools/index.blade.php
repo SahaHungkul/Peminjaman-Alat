@@ -42,7 +42,15 @@
                                 <td>
                                     <span>{{ $tool->category->nama_kategori }}</span>
                                 </td>
-                                <td>{{ $tool->stok }}</td>
+                                <td>{{ $tool->stok }}
+                                    @if ($tool->stok <= 2 && $tool->stok > 0)
+                                        <span class="badge bg-warning text-dark animate-pulse">
+                                            <i class="bi bi-exclamation-triangle"></i> Stok Menipis
+                                        </span>
+                                    @elseif($tool->stok == 0)
+                                        <span class="badge bg-danger">Habis</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ route('tools.edit', $tool->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                     <form action="{{ route('tools.destroy', $tool->id) }}" method="POST" class="d-inline"

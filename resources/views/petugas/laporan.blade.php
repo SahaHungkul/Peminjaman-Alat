@@ -19,7 +19,9 @@
 <body class="p-4">
     <div class="d-flex justify-content-between mb-4">
         <h2>Laporan Peminjaman Alat</h2>
-        <button onclick="window.print()" class="btn btn-primary no-print">Cetak PDF / Print</button>
+        <a href="{{ url()->current() }}?export=pdf" class="btn btn-primary">
+            Cetak PDF
+        </a>
     </div>
 
     <table class="table table-bordered">

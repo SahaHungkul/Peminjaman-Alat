@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 use function Laravel\Prompts\error;
 
 class PetugasController extends Controller
@@ -136,6 +136,16 @@ class PetugasController extends Controller
 
     public function report(Request $request){
         $loans = Loan::with(['user','tool'])->get();
+
+        if($request->has('export') && $request->export == 'pdf'){
+            $pdf = Pdf::loadView('petugas.laporan',compact('loans'));
+            return $pdf->download('laporan.pdf');
+        }
         return view('petugas.laporan',compact('loans'));
+    }
+
+    public function pdf(){
+        $data = Loan::all();
+        $pdf = Pdf::loadView('pdf.laporan_template', compact('data'));
     }
 }
