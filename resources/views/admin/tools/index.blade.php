@@ -56,18 +56,22 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('tools.edit', $tool->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <a href="{{ route('tools.edit', $tool->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></a>
                                     <form action="{{ route('tools.destroy', $tool->id) }}" method="POST" class="d-inline"
                                         onsubmit="return confirm('Yakin ingin menghapus alat ini?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        @if ($tool->stok > 0)
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                                        @else
+                                        <button type="submit" class="btn btn-danger btn-sm" disabled><i class="bi bi-trash"></i></button>
+                                        @endif
                                     </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-4"> Belum Ada alat. Silahkan tambah data Baru</td>
+                                <td colspan="7" class="text-center py-4"> Belum Ada alat. Silahkan tambah data Baru</td>
                             </tr>
                         @endforelse
                     </tbody>

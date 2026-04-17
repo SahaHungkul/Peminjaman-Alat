@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>PINJAMIN AJA - Sistem Peminjaman Alat</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -267,6 +268,13 @@
     </footer>
 
     {{-- Script dipindah ke paling bawah sebelum penutup body --}}
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('midtrans.client_key') }}"></script>
+
+    {{-- Di bagian head atau sebelum tag body --}}
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         (function() {
             const htmlElement = document.documentElement;
@@ -291,6 +299,9 @@
                 }
             });
         })();
+    </script>
+    <script>
+        console.log('Midtrans Snap loaded:', typeof window.snap);
     </script>
 </body>
 

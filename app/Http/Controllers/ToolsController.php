@@ -140,11 +140,17 @@ class ToolsController extends Controller
         DB::beginTransaction();
 
         try {
-            if ($tool->gambar && Storage::disk('public')->exists($tool->gambar)) {
-                Storage::disk('public')->delete($tool->gambar);
+            $dipinjam = $tool->loans()->whereNull('tanggal_kembali_aktual')->exists();
+
+            if($dipinjam){
+                return back()->with('error','tidak bisa di hapus, ALat sedang dipinjam');
             }
 
             $namaAlat = $tool->nama_alat;
+
+            if ($tool->gambar && Storage::disk('public')->exists($tool->gambar)) {
+                Storage::disk('public')->delete($tool->gambar);
+            }
             $tool->delete();
 
             ActivityLog::record('Hapus Alat', 'Menghapus alat: ' . $namaAlat);

@@ -131,6 +131,11 @@ class UserController extends Controller
 
         DB::beginTransaction();
         try {
+            $lagiPinjam = $user->loans()->exists();
+            if($lagiPinjam){
+                return back()->with('error','tidak bisa dihapus, sedang pinjam');
+            }
+
             $nama = $user->name;
             $user->delete();
 

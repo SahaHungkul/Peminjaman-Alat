@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Loan;
-use App\Models\Tools;
+// use App\Models\Tools;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+// use Illuminate\Support\Facades\Storage;
 use function Laravel\Prompts\error;
 
 class PetugasController extends Controller
@@ -24,29 +25,32 @@ class PetugasController extends Controller
         return view('petugas.dashboard',compact('loans','activeLoans','sudahDikembalikan'));
     }
 
-    public function approve($id){
-        DB::beginTransaction();
-        try{
-        $loan = Loan::findOrFail($id);
+    public function approve(Request $request, $id)
+{
+    $request->validate([
+        'gambar_awal' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        'catatan' => 'nullable|string'
+    ]);
+
+    $loan = Loan::findOrFail($id);
+
+    try {
+        $path = $request->file('gambar_awal')->store('peminjaman/awal', 'public');
 
         $loan->update([
             'status' => 'disetujui',
             'petugas_id' => Auth::id(),
-            'tanggal_kembali_aktual' =>now()
+            'gambar_awal' => $path,
+            'catatan' => $request->catatan, // Mengisi kolom catatan tunggal
         ]);
 
-        $tool = Tools::find($loan->tool_id);
-        $tool->decrement('stok', $loan->qty);
-
-        DB::commit();
-        return back()->with('success','Peminjaman Disetujui');
-        }catch(Exception $e){
-            DB::rollBack();
-
-            Log::error('gagal approve:' . $e->getMessage());
-            return redirect()->back()->with('error', 'terjadi kesalahan Sistem.')->withInput();
-        }
+        return back()->with('success', 'Peminjaman berhasil disetujui.');
+    } catch (Exception $e) {
+        DB::rollBack();
+    Log::error('gagal tolak: ' . $e->getMessage());
+        return back()->with('error', 'Terjadi kesalahan saat menyetujui.');
     }
+}
 
     public function reject($id){
         DB::beginTransaction();
@@ -75,6 +79,7 @@ class PetugasController extends Controller
             $request->validate([
                 // 'denda' => 'nullable|integer|min:0',
                 'gambar' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+                'catatan' => 'nullable|string'
             ]);
 
             $loan = Loan::findOrFail($id);
@@ -93,6 +98,7 @@ class PetugasController extends Controller
                 'status_denda' => $total > 0 ? 'belum_bayar' : 'tidak_ada',
                 'petugas_id' => Auth::id(),
                 'gambar' => $path,
+                'catatan' => $request->catatan,
             ]);
 
             $loan->tool->increment('stok', $loan->qty);

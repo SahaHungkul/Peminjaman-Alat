@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminLoanController;
 use App\Http\Controllers\AdminReturnController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PeminjamController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\ToolsController;
@@ -53,6 +54,19 @@ route::middleware(['auth','role:admin'])->group(function(){
 Route::middleware(['auth','role:peminjam'])->group(function(){
     Route::get('/peminjam/dashboard',[PeminjamController::class,'index'])->name('peminjam.dashboard');
     Route::post('/peminjam/ajukan',[PeminjamController::class,'store']);
-    Route::get('/peminjam/riwayat',[PeminjamController::class,'history']);
+    Route::get('/peminjam/riwayat',[PeminjamController::class,'history'])->name('peminjam.riwayat');
     route::post('/peminjam/return/{id}',[PeminjamController::class,'return'])->name('peminjam.return');
+    // Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('peminjam.process-payment');
+    // Route::post('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('peminjam.payment-success');
+    // Route::post('/payment/process', [PaymentController::class, 'paymentFailed'])->name('peminjam.payment-failed');
+    // Route::post('/payment/process', [PaymentController::class, 'checkStatus'])->name('peminjam.payment-status');
 });
+
+Route::middleware(['auth'])->prefix('peminjam')->group(function () {
+    Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('peminjam.process-payment');
+    Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('peminjam.payment-success');
+    Route::get('/payment/failed', [PaymentController::class, 'paymentFailed'])->name('peminjam.payment-failed');
+    Route::get('/payment/status/{orderId}', [PaymentController::class, 'checkStatus'])->name('peminjam.payment-status');
+});
+
+Route::post('/midtrans/notification', [PaymentController::class, 'handleNotification'])->name('midtrans.notification');

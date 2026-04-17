@@ -29,6 +29,15 @@ class Loan extends Model
         return $this->belongsTo(User::class,'petugas_id');
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function latestTransaction()
+    {
+        return $this->hasOne(Transaction::class)->latest();
+}
     public function getDendaSaatIniAttribute(){
         if($this->status == 'kembali'){
             return (float) $this->denda;

@@ -15,13 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
         // admin
         User::create([
             'name' =>'Admin Utama',
@@ -38,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'petugas'
         ]);
 
-        //
+        // peminjam
         User::create([
             'name' =>'Siswa 1',
             'email' => 'siswa@app.com',

@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->date('tanggal_kembali_aktual')->nullable()->change();
+            $table->string('gambar_awal')->nullable();
+            $table->text('catatan')->nullable();
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->date('tanggal_kembali_aktual')->nullable()->change();
+            //
         });
     }
 };

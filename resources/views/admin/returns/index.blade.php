@@ -27,9 +27,9 @@
                             <td>{{ $returns->firstItem() + $key }}</td>
                             <td>{{ $r->user->name }}</td>
                             <td>{{ $r->tool->nama_alat }} x{{ $r->qty }}</td>
-                            <td>{{ $r->tanggal_pinjam }}</td>
+                            <td>{{ $r->tanggal_pinjam->format('Y-m-d') }}</td>
                             <td>
-                                {{ $r->tanggal_kembali_aktual }}
+                                {{ $r->tanggal_kembali_aktual->format('Y-m-d') }}
                                 @if ($r->tanggal_kembali_aktual > $r->tanggal_kembali_rencana)
                                     <span class="badge bg-danger">Telat</span>
                                 @else

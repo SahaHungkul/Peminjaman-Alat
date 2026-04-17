@@ -3,52 +3,131 @@
 @section('content')
     <h3>Permintaan Peminjaman Masuk</h3>
     <div class="card mb-4">
-        <div class="card-header bg-warning text-dark">Menunggu Persetujuan</div>
+        <div class="card-header bg-warning text-dark">Monitor Peminjaman</div>
         <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Peminjam</th>
-                        <th>Alat</th>
-                        <th>Tgl Pinjam</th>
-                        <th>Rencana Kembali</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($loans as $loan)
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>{{ $loan->user->name }}</td>
-                            <td>{{ $loan->tool->nama_alat }} x{{ $loan->qty }}</td>
-                            <td>{{ $loan->tanggal_pinjam }}</td>
-                            <td>{{ $loan->tanggal_kembali_rencana }}</td>
-                            <td>
-                                <form action="{{ url('/petugas/approve/' . $loan->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button class="btn btn-success btn-sm">Setujui</button>
-                                </form>
-                                <form action="{{ url('/petugas/reject/' . $loan->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button class="btn btn-danger btn-sm">Tolak</button>
-                                </form>
-                            </td>
+                            <th>Peminjam</th>
+                            <th>Alat</th>
+                            <th>Tgl Pinjam</th>
+                            <th>Rencana Kembali</th>
+                            <th>Aksi</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Tidak ada permintaan baru.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse($loans as $loan)
+                            <tr>
+                                <td>{{ $loan->user->name }}</td>
+                                {{-- Pastikan relasi tool atau details sesuai dengan logic "Many tools" Anda --}}
+                                <td>{{ $loan->tool->nama_alat ?? 'Alat tidak ditemukan' }} x{{ $loan->qty }}</td>
+                                <td>{{ $loan->tanggal_pinjam->format('Y-m-d') }}</td>
+                                <td>{{ $loan->tanggal_kembali_rencana->format('Y-m-d') }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#modalSetuju{{ $loan->id }}">Setujui</button>
+
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#modalTolak{{ $loan->id }}">
+                                        Tolak
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <div class="modal fade" id="modalSetuju{{ $loan->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ url('/petugas/approve/' . $loan->id) }}" method="POST"
+                                            enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Konfirmasi Persetujuan #{{ $loan->id }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-muted">Peminjam: <strong>{{ $loan->user->name }}</strong>
+                                                </p>
+                                                <p>Silakan upload <strong>Foto Kondisi Awal</strong> alat sebelum
+                                                    diserahkan.</p>
+
+                                                <div class="mb-3">
+                                                    <label for="gambar_awal" class="form-label fw-bold">Gambar Kondisi
+                                                        Awal</label>
+                                                    <input type="file" class="form-control" name="gambar_awal"
+                                                        accept="image/*" required>
+                                                    <div class="form-text text-muted">Format: jpg, png, jpeg. Maks: 2MB.
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Catatan Kondisi</label>
+                                                    <textarea class="form-control" name="catatan" rows="3"
+                                                        placeholder="Contoh: Kamera dalam kondisi baterai penuh, ada sedikit goresan di layar..."></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-success">Setujui & Kirim</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="modalTolak{{ $loan->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ url('/petugas/reject/' . $loan->id) }}" method="POST">
+                                            @csrf
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-danger">Tolak Peminjaman #{{ $loan->id }}
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Apakah Anda yakin ingin menolak peminjaman oleh
+                                                    <strong>{{ $loan->user->name }}</strong>?</p>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Alasan Penolakan</label>
+                                                    <textarea class="form-control" name="catatan" rows="3" placeholder="Tuliskan alasan penolakan di sini..."
+                                                        required></textarea>
+                                                    <div class="form-text">Catatan ini akan terlihat oleh peminjam.</div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-danger">Ya, Tolak Pengajuan</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">Tidak ada permintaan baru.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
             <div class="mt-3">{{ $loans->links('pagination::bootstrap-5') }}</div>
         </div>
     </div>
 
     <h3>Daftar Sedang Dipinjam (Belum Kembali)</h3>
     <div class="card mb-3">
-        <div class="card-header bg-info text-white">Monitor Peminjaman</div>
-        <div class="card-body">
-            <table class="table">
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <span>Monitor Peminjaman</span>
+        <span class="badge bg-light text-dark">{{ $activeLoans->total() }} Transaksi Aktif</span>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table align-middle">
                 <thead>
                     <tr>
                         <th>Peminjam</th>
@@ -56,72 +135,114 @@
                         <th>Tanggal</th>
                         <th>Status</th>
                         <th>Denda</th>
-                        <th>Bukti</th>
-                        <th>Aksi</th>
+                        <th>Bukti Awal</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($activeLoans as $active)
                         <tr>
-                            <td>{{ $active->user->name }} {{ $active->denda_saat_ini }}</td>
+                            <td>{{ $active->user->name }}</td>
                             <td>{{ $active->tool->nama_alat }} x{{ $active->qty }}</td>
                             <td>
-                                {{ $active->tanggal_pinjam->format('Y-m-d') }} <br>
-                                <small class="text-muted">hingga:
-                                    {{ $active->tanggal_kembali_rencana->format('Y-m-d') }}</small>
+                                <small>{{ $active->tanggal_pinjam->format('d M Y') }}</small><br>
+                                <small class="text-muted">Hingga: {{ $active->tanggal_kembali_rencana->format('d M Y') }}</small>
                             </td>
-
                             <td>
-                                @if ($active->status == 'disetujui')
-                                    {{-- Bandingkan tanggal hari ini dengan rencana kembali --}}
-                                    @if (now()->startOfDay()->gt($active->tanggal_kembali_rencana->startOfDay()))
-                                        <span class="badge bg-danger">Terlambat</span>
-                                    @else
-                                        <span class="badge bg-primary">Sedang Dipinjam</span>
-                                    @endif
+                                @if (now()->startOfDay()->gt($active->tanggal_kembali_rencana->startOfDay()))
+                                    <span class="badge bg-danger">Terlambat</span>
                                 @else
-                                    <span class="badge bg-secondary">{{ $active->status }}</span>
+                                    <span class="badge bg-primary">Sedang Dipinjam</span>
                                 @endif
                             </td>
-
-                            {{-- Kolom Denda --}}
                             <td>
                                 @if ($active->denda_saat_ini > 0)
-                                    <span class="text-danger fw-bold">
-                                        Rp {{ number_format($active->denda_saat_ini, 0, ',', '.') }}
-                                    </span>
-                                    <small class="d-block text-muted">
-                                        Telat
-                                        {{ now()->startOfDay()->diffInDays($active->tanggal_kembali_rencana->startOfDay()) }}
-                                        hari
-                                    </small>
+                                    <span class="text-danger fw-bold">Rp {{ number_format($active->denda_saat_ini, 0, ',', '.') }}</span>
+                                    <small class="d-block text-muted">{{ now()->startOfDay()->diffInDays($active->tanggal_kembali_rencana->startOfDay()) }} Hari</small>
                                 @else
                                     <span class="text-success">0</span>
                                 @endif
                             </td>
-
-                            {{-- Kolom Aksi (Input File & Button) --}}
-                            <td colspan="2">
-                                <form action="{{ url('/petugas/return/' . $active->id) }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="d-flex gap-2">
-                                        <input type="file" name="gambar" class="form-control form-control-sm"
-                                            accept="image/*" required style="width: 200px">
-                                        <button type="submit" class="btn btn-primary btn-sm"
-                                            onclick="return confirm('Konfirmasi pengembalian alat?')">
-                                            <i class="bi bi-check"></i>
-                                        </button>
-                                    </div>
-                                </form>
+                            {{-- Bukti Awal --}}
+                            <td>
+                                @if($active->gambar_awal)
+                                    <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalBuktiAwal{{ $active->id }}">
+                                        <i class="bi bi-image"></i> Lihat
+                                    </button>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
+                            {{-- Aksi --}}
+                            <td class="text-center">
+                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalKembali{{ $active->id }}">
+                                    <i class="bi bi-arrow-return-left"></i> Kembalikan
+                                </button>
                             </td>
                         </tr>
+
+                        <div class="modal fade" id="modalBuktiAwal{{ $active->id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Kondisi Awal Alat</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="{{ asset('storage/' . $active->gambar_awal) }}" class="img-fluid rounded mb-3" alt="Bukti Awal">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="modalKembali{{ $active->id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form action="{{ url('/petugas/return/' . $active->id) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Konfirmasi Pengembalian</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="alert alert-info">
+                                                Alat: <strong>{{ $active->tool->nama_alat }} ({{ $active->qty }} unit)</strong><br>
+                                                Peminjam: <strong>{{ $active->user->name }}</strong>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Foto Kondisi Akhir</label>
+                                                <input type="file" name="gambar" class="form-control" accept="image/*" required>
+                                                <small class="text-muted">Wajib upload foto kondisi alat saat ini.</small>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Catatan Pengembalian</label>
+                                                <textarea name="catatan" class="form-control" rows="3" placeholder="Contoh: Alat kembali dengan lengkap, ada sedikit kotor di body..."></textarea>
+                                            </div>
+
+                                            @if($active->denda_saat_ini > 0)
+                                            <div class="p-2 bg-danger-subtle text-danger border border-danger rounded">
+                                                <i class="bi bi-exclamation-circle"></i>
+                                                <strong>Denda Terdeteksi: Rp {{ number_format($active->denda_saat_ini, 0, ',', '.') }}</strong>
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                            <button type="submit" class="btn btn-primary">Konfirmasi Pengembalian Alat</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
                 </tbody>
             </table>
-            <div class="mt-3">{{ $activeLoans->links('pagination::bootstrap-5') }}</div>
         </div>
+        <div class="mt-3">{{ $activeLoans->links('pagination::bootstrap-5') }}</div>
     </div>
+</div>
 
     <h3>Daftar Sudah Dikembalikan</h3>
     <div class="card mb-3">
